@@ -36,7 +36,24 @@ $(document).ready(function () {
 
             for (var i = 0; i < 100; i++) {
                 console.log(coins[i]);
-                divcreate.innerHTML += `<p style="color:red;">${coins[i].name}</p>`;
+                divcreate.innerHTML += `
+            <div class="card text-dark bg-primary mb-3 makeinline" style="max-width: 18rem;">
+                <div class="card-header">
+                    <div class="flexalign">
+                        <span class="coinsymbol">${coins[i].symbol}</span>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="flexalign">
+                        <h5 class="card-title coinname">${coins[i].name}</h5>
+                        <button type="button" class="btn btn-secondary">More info</button>
+                    </div>
+                </div>
+            </div>`;
                 $("#pagecont").append(divcreate);
 
 
