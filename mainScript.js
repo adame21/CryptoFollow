@@ -7,7 +7,7 @@ $(document).ready(function () {
             getCoins();
         },
         error: function (error) {
-            $("#navcont").html("Failed to retrieve navbar, check for missing files, error code:" + error.status + error.statusText);
+            $("#navcont").html("Failed to retrieve navbar, check for missing files, error code:" + error.statusText + error.status);
         }
     });
     function getCoins() {
@@ -22,7 +22,7 @@ $(document).ready(function () {
             },
             error: function (error) {
                 stopLoader();
-                console.log(error.status);
+                $("#pagecont").html("Could not retrieve data from api error:" + error.statusText + error.status);
             }
         });
     }
@@ -54,7 +54,7 @@ function moreInfo(coinid) {
             $("#" + coinid).html("\n            <img src=\"" + result.image.small + "\" />\n            <span class=\"displaycurrency\">USD: " + usdprice.toFixed(4) + "$</span>\n            <span class=\"displaycurrency\">EUR: " + eurprice.toFixed(4) + "\u20AC</span>\n            <span class=\"displaycurrency\">ILS: " + ilsprice.toFixed(4) + "\u20AA</span>\n            ");
         },
         error: function (error) {
-            $("#" + coinid).html("\n            Could not retrieve data from api error:" + error.status + error.statusText + "    \n            ");
+            $("#" + coinid).html("\n            Could not retrieve data from api error:" + error.statusText + error.status + "\n            ");
         }
     });
 }
