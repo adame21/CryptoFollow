@@ -11,14 +11,17 @@ $(document).ready(function () {
         }
     });
     function getCoins() {
+        startLoader();
         $.ajax({
             type: "GET",
             url: "https://api.coingecko.com/api/v3/coins/list",
             success: function (result) {
+                stopLoader();
                 console.log(result);
                 homeStart(result);
             },
             error: function (error) {
+                stopLoader();
                 console.log(error.status);
             }
         });
@@ -31,16 +34,33 @@ $(document).ready(function () {
             $("#pagecont").append(divcreate);
         }
     }
+    function startLoader() {
+        $("#pagecont").append("\n        <div class=\"d-flex justify-content-center\" id=\"loadingcircle\">\n        <div class=\"spinner-border text-primary\" role=\"status\">\n        <span class=\"sr-only\">Loading...</span>\n        </div>\n        </div>\n        ");
+    }
+    function stopLoader() {
+        $("#loadingcircle").remove();
+    }
 });
 function moreInfo(coinid) {
-    console.log(coinid);
+    startInfoLoader(coinid);
     $.ajax({
         type: "GET",
         url: "https://api.coingecko.com/api/v3/coins/" + coinid,
         success: function (result) {
-            $("#" + coinid).html("\n            <img src=\"" + result.image.thumb + "\" />\n            <span style=\"display:block\">USD: " + result.market_data.current_price.usd + "$</span>\n            <span style=\"display:block\">EUR: " + result.market_data.current_price.eur + "\u20AC</span>\n            <span style=\"display:block\">ILS: " + result.market_data.current_price.ils + "\u20AA</span>\n            ");
+            stopInfoLoader(coinid);
+            var usdprice = Math.floor(result.market_data.current_price.usd * 10000) / 10000;
+            var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
+            var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
+            $("#" + coinid).html("\n            <img src=\"" + result.image.small + "\" />\n            <span class=\"displaycurrency\">USD: " + usdprice.toFixed(4) + "$</span>\n            <span class=\"displaycurrency\">EUR: " + eurprice.toFixed(4) + "\u20AC</span>\n            <span class=\"displaycurrency\">ILS: " + ilsprice.toFixed(4) + "\u20AA</span>\n            ");
         },
         error: function (error) {
+            $("#" + coinid).html("\n            Could not retrieve data from api error:" + error.status + error.statusText + "    \n            ");
         }
     });
+}
+function startInfoLoader(coinid) {
+    $("#" + coinid).append("\n    <div class=\"d-flex justify-content-center\" id=\"loadingcircle" + coinid + "\">\n    <div class=\"spinner-border\" role=\"status\">\n    <span class=\"sr-only\">Loading...</span>\n    </div>\n    </div>\n    ");
+}
+function stopInfoLoader(coinid) {
+    $("#loadingcircle" + coinid).remove();
 }

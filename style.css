@@ -43,6 +43,11 @@
     max-height: 25em;
     margin-top: 1em !important;
     margin-bottom: 1em !important;
+    min-width: 230px;
+  }
+  /*more info styling  */
+  .displaycurrency {
+    display: block;
   }
   /*Toggler CSS*/
   .switch {
@@ -143,6 +148,11 @@
     max-height: 25em;
     margin-top: 1em !important;
     margin-bottom: 1em !important;
+    min-width: 230px;
+  }
+  /*more info styling  */
+  .displaycurrency {
+    display: block;
   }
   /*Toggler CSS*/
   .switch {
@@ -243,6 +253,11 @@
     max-height: 25em;
     margin-top: 2em !important;
     margin-bottom: 2em !important;
+    min-width: 230px;
+  }
+  /*more info styling  */
+  .displaycurrency {
+    display: block;
   }
   /*Toggler CSS*/
   .switch {

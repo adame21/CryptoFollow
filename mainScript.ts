@@ -15,14 +15,17 @@ $(document).ready(function () {
 
 
     function getCoins(): void {
+        startLoader();
         $.ajax({
             type: "GET",
             url: `https://api.coingecko.com/api/v3/coins/list`,
             success: (result) => {
+                stopLoader();
                 console.log(result);
                 homeStart(result);
             },
             error: (error) => {
+                stopLoader();
                 console.log(error.status);
             }
 
@@ -31,12 +34,12 @@ $(document).ready(function () {
 
         })
     }
-        function homeStart(coins: any[]): void {
-            var divcreate = document.createElement("div");
+    function homeStart(coins: any[]): void {
+        var divcreate = document.createElement("div");
 
-            for (var i = 0; i < 100; i++) {
-                console.log(coins[i]);
-                divcreate.innerHTML += `
+        for (var i = 0; i < 100; i++) {
+            console.log(coins[i]);
+            divcreate.innerHTML += `
             <div class="card text-dark bg-primary m-auto makeinline" id="${coins[i].id}${i}" style="max-width: 18rem;">
                 <div class="card-header">
                     <div class="flexalign">
@@ -60,18 +63,28 @@ $(document).ready(function () {
                     </div>
                 </div>
             </div>`;
-                $("#pagecont").append(divcreate);
+            $("#pagecont").append(divcreate);
 
 
 
-            }
-        
+        }
+
 
     }
 
 
-
-
+    function startLoader() {
+        $("#pagecont").append(`
+        <div class="d-flex justify-content-center" id="loadingcircle">
+        <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+        </div>
+        </div>
+        `);
+    }
+    function stopLoader() {
+        $("#loadingcircle").remove();
+    }
 
 
 
@@ -85,21 +98,40 @@ $(document).ready(function () {
 
 });
 
-function moreInfo(coinid:any):any{
-    console.log(coinid);
+function moreInfo(coinid: any): void {
+    startInfoLoader(coinid);
     $.ajax({
         type: "GET",
         url: `https://api.coingecko.com/api/v3/coins/${coinid}`,
-        success: (result)=>{
-            $("#"+coinid).html(`
-            <img src="${result.image.thumb}" />
-            <span style="display:block">USD: ${result.market_data.current_price.usd}$</span>
-            <span style="display:block">EUR: ${result.market_data.current_price.eur}€</span>
-            <span style="display:block">ILS: ${result.market_data.current_price.ils}₪</span>
+        success: (result) => {
+            stopInfoLoader(coinid);
+            var usdprice = Math.floor(result.market_data.current_price.usd * 10000) / 10000;
+            var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
+            var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
+            $("#" + coinid).html(`
+            <img src="${result.image.small}" />
+            <span class="displaycurrency">USD: ${usdprice.toFixed(4)}$</span>
+            <span class="displaycurrency">EUR: ${eurprice.toFixed(4)}€</span>
+            <span class="displaycurrency">ILS: ${ilsprice.toFixed(4)}₪</span>
             `);
         },
-        error: (error)=>{
-
+        error: (error) => {
+            $("#" + coinid).html(`
+            Could not retrieve data from api error:${error.status}${error.statusText}    
+            `)
         }
     })
+}
+
+function startInfoLoader(coinid: any){
+    $("#"+coinid).append(`
+    <div class="d-flex justify-content-center" id="loadingcircle${coinid}">
+    <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+    </div>
+    </div>
+    `);
+}
+function stopInfoLoader(coinid:any){
+    $(`#loadingcircle${coinid}`).remove();
 }
