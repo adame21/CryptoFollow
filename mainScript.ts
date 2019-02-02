@@ -86,43 +86,120 @@ $(document).ready(function () {
         $("#loadingcircle").remove();
     }
 
-
-
-
-
-
-
-
-
-
-
 });
 
 function moreInfo(coinid: any): void {
-
-
-    startInfoLoader(coinid);
-    $.ajax({
-        type: "GET",
-        url: `https://api.coingecko.com/api/v3/coins/${coinid}`,
-        success: (result) => {
-            stopInfoLoader(coinid);
-            var usdprice = Math.floor(result.market_data.current_price.usd * 10000) / 10000;
-            var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
-            var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
+    var coin = JSON.parse(localStorage.getItem(coinid));
+    // console.log(coin.time);
+    if(coin != null){
+        console.log("local storage is not null amigo");
+        if(coin.time+120000 < Date.now()){
+            console.log("shit man this data is too old now lemme get a fresh copy");
+            startInfoLoader(coinid);
+            $.ajax({
+                type: "GET",
+                url: `https://api.coingecko.com/api/v3/coins/${coinid}`,
+                success: (result) => {
+                    stopInfoLoader(coinid);
+        
+                    result.time = Date.now();
+                    localStorage.setItem(coinid, JSON.stringify(result));
+        
+                    var usdprice = Math.floor(result.market_data.current_price.usd * 10000) / 10000;
+                    var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
+                    var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
+                    $("#" + coinid).html(`
+                    <img src="${result.image.small}" />
+                    <span class="displaycurrency">USD: ${usdprice.toFixed(4)}$</span>
+                    <span class="displaycurrency">EUR: ${eurprice.toFixed(4)}€</span>
+                    <span class="displaycurrency">ILS: ${ilsprice.toFixed(4)}₪</span>
+                    `);
+                },
+                error: (error) => {
+                    $("#" + coinid).html(`
+                    Could not retrieve data from api error:${error.statusText}${error.status}
+                    `)
+                }
+            })
+        }
+        //This else is in case the information existing in localstorage isnt too old (2 minutes is the cutoff)
+        else{
+            console.log("why go to the store when we have perfectly good data already here");
+            var usdprice = Math.floor(coin.market_data.current_price.usd * 10000) / 10000;
+            var eurprice = Math.floor(coin.market_data.current_price.eur * 10000) / 10000;
+            var ilsprice = Math.floor(coin.market_data.current_price.ils * 10000) / 10000;
             $("#" + coinid).html(`
-            <img src="${result.image.small}" />
+            <img src="${coin.image.small}" />
             <span class="displaycurrency">USD: ${usdprice.toFixed(4)}$</span>
             <span class="displaycurrency">EUR: ${eurprice.toFixed(4)}€</span>
             <span class="displaycurrency">ILS: ${ilsprice.toFixed(4)}₪</span>
             `);
-        },
-        error: (error) => {
-            $("#" + coinid).html(`
-            Could not retrieve data from api error:${error.statusText}${error.status}
-            `)
         }
-    })
+    }
+    //This else is in case whats in localstorage is null(it is checked by ID)
+    else{
+        console.log("there is nothing with the correct id in the localstorage so ima get you a fresh copy of all those coins and shit");
+        startInfoLoader(coinid);
+        $.ajax({
+            type: "GET",
+            url: `https://api.coingecko.com/api/v3/coins/${coinid}`,
+            success: (result) => {
+                stopInfoLoader(coinid);
+    
+                result.time = Date.now();
+                localStorage.setItem(coinid, JSON.stringify(result));
+                
+    
+    
+    
+                var usdprice = Math.floor(result.market_data.current_price.usd * 10000) / 10000;
+                var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
+                var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
+                $("#" + coinid).html(`
+                <img src="${result.image.small}" />
+                <span class="displaycurrency">USD: ${usdprice.toFixed(4)}$</span>
+                <span class="displaycurrency">EUR: ${eurprice.toFixed(4)}€</span>
+                <span class="displaycurrency">ILS: ${ilsprice.toFixed(4)}₪</span>
+                `);
+            },
+            error: (error) => {
+                $("#" + coinid).html(`
+                Could not retrieve data from api error:${error.statusText}${error.status}
+                `)
+            }
+        })
+    }
+
+
+    
+    // $.ajax({
+    //     type: "GET",
+    //     url: `https://api.coingecko.com/api/v3/coins/${coinid}`,
+    //     success: (result) => {
+    //         stopInfoLoader(coinid);
+
+    //         result.time = Date.now();
+    //         localStorage.setItem(coinid, JSON.stringify(result));
+            
+
+
+
+    //         var usdprice = Math.floor(result.market_data.current_price.usd * 10000) / 10000;
+    //         var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
+    //         var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
+    //         $("#" + coinid).html(`
+    //         <img src="${result.image.small}" />
+    //         <span class="displaycurrency">USD: ${usdprice.toFixed(4)}$</span>
+    //         <span class="displaycurrency">EUR: ${eurprice.toFixed(4)}€</span>
+    //         <span class="displaycurrency">ILS: ${ilsprice.toFixed(4)}₪</span>
+    //         `);
+    //     },
+    //     error: (error) => {
+    //         $("#" + coinid).html(`
+    //         Could not retrieve data from api error:${error.statusText}${error.status}
+    //         `)
+    //     }
+    // })
 }
 
 function startInfoLoader(coinid: any){
