@@ -43,9 +43,9 @@ $(document).ready(function () {
             <div class="card text-dark bg-primary m-auto makeinline" id="${coins[i].id}${i}" style="max-width: 18rem;">
                 <div class="card-header">
                     <div class="flexalign">
-                        <span class="coinsymbol">${coins[i].symbol}</span>
+                        <span class="coinsymbol">${coins[i].symbol.toUpperCase()}</span>
                         <label class="switch">
-                            <input type="checkbox">
+                            <input type="checkbox" id="${coins[i].id}${coins[i].symbol}" onchange="selectedCoinUpdate(this,'${coins[i].symbol}')"> 
                             <span class="slider round"></span>
                         </label>
                     </div>
@@ -88,12 +88,13 @@ $(document).ready(function () {
 
 });
 
+var selectedcoins: any[] = [];
+
 function moreInfo(coinid: any): void {
     var coin = JSON.parse(localStorage.getItem(coinid));
-    // console.log(coin.time);
-    if(coin != null){
+    if (coin != null) {
         console.log("local storage is not null amigo");
-        if(coin.time+120000 < Date.now()){
+        if (coin.time + 120000 < Date.now()) {
             console.log("shit man this data is too old now lemme get a fresh copy");
             startInfoLoader(coinid);
             $.ajax({
@@ -101,10 +102,10 @@ function moreInfo(coinid: any): void {
                 url: `https://api.coingecko.com/api/v3/coins/${coinid}`,
                 success: (result) => {
                     stopInfoLoader(coinid);
-        
+
                     result.time = Date.now();
                     localStorage.setItem(coinid, JSON.stringify(result));
-        
+
                     var usdprice = Math.floor(result.market_data.current_price.usd * 10000) / 10000;
                     var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
                     var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
@@ -123,7 +124,7 @@ function moreInfo(coinid: any): void {
             })
         }
         //This else is in case the information existing in localstorage isnt too old (2 minutes is the cutoff)
-        else{
+        else {
             console.log("why go to the store when we have perfectly good data already here");
             var usdprice = Math.floor(coin.market_data.current_price.usd * 10000) / 10000;
             var eurprice = Math.floor(coin.market_data.current_price.eur * 10000) / 10000;
@@ -137,7 +138,7 @@ function moreInfo(coinid: any): void {
         }
     }
     //This else is in case whats in localstorage is null(it is checked by ID)
-    else{
+    else {
         console.log("there is nothing with the correct id in the localstorage so ima get you a fresh copy of all those coins and shit");
         startInfoLoader(coinid);
         $.ajax({
@@ -145,13 +146,10 @@ function moreInfo(coinid: any): void {
             url: `https://api.coingecko.com/api/v3/coins/${coinid}`,
             success: (result) => {
                 stopInfoLoader(coinid);
-    
+
                 result.time = Date.now();
                 localStorage.setItem(coinid, JSON.stringify(result));
-                
-    
-    
-    
+
                 var usdprice = Math.floor(result.market_data.current_price.usd * 10000) / 10000;
                 var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
                 var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
@@ -171,7 +169,7 @@ function moreInfo(coinid: any): void {
     }
 
 
-    
+
     // $.ajax({
     //     type: "GET",
     //     url: `https://api.coingecko.com/api/v3/coins/${coinid}`,
@@ -180,7 +178,7 @@ function moreInfo(coinid: any): void {
 
     //         result.time = Date.now();
     //         localStorage.setItem(coinid, JSON.stringify(result));
-            
+
 
 
 
@@ -202,8 +200,8 @@ function moreInfo(coinid: any): void {
     // })
 }
 
-function startInfoLoader(coinid: any){
-    $("#"+coinid).append(`
+function startInfoLoader(coinid: any) {
+    $("#" + coinid).append(`
     <div class="d-flex justify-content-center" id="loadingcircle${coinid}">
     <div class="spinner-border" role="status">
     <span class="sr-only">Loading...</span>
@@ -211,6 +209,73 @@ function startInfoLoader(coinid: any){
     </div>
     `);
 }
-function stopInfoLoader(coinid:any){
+function stopInfoLoader(coinid: any) {
     $(`#loadingcircle${coinid}`).remove();
+}
+
+
+
+
+
+
+
+
+function selectedCoinUpdate(cointoggle: any, coinsymbol: any) {
+    var uppercoinsymbol: any = coinsymbol.toUpperCase();
+
+    if (selectedcoins.length >= 5 && cointoggle.checked) {
+        console.log("too many coins");
+        console.log(coinsymbol);
+        cointoggle.checked = false;
+        var modalbody: any = document.createElement("div");
+        modalbody.innerHTML = "";
+        for (var i = 0; i < selectedcoins.length; i++) {
+            modalbody.innerHTML += `
+                <div class="modalbodycoin bg-primary text-light m-2" onclick="changeSelected(this.innerHTML,'${coinsymbol}')">${selectedcoins[i]}</div>
+            `;
+
+
+        }
+
+        $("#modalbodymessage").append(modalbody);
+        //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize modal method)
+        $('#toomanycoinsmodal').modal({backdrop: 'static', keyboard: false})
+        //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize modal method)
+        $('#toomanycoinsmodal').modal('show');
+        
+
+    }
+    else {
+        console.log(cointoggle);
+        if (cointoggle.checked) {
+            selectedcoins.push(uppercoinsymbol);
+            console.log(selectedcoins);
+
+        }
+        else {
+            let coinindex: number = selectedcoins.indexOf(uppercoinsymbol);
+            console.log(coinindex);
+            selectedcoins.splice(coinindex, 1);
+            console.log(selectedcoins);
+
+        }
+    }
+
+}
+
+function changeSelected(cointoremove: string, cointoadd: string) {
+    
+    console.log(cointoremove);
+    console.log(cointoadd);
+    let coinindex: number = selectedcoins.indexOf(cointoremove);
+    console.log(coinindex);
+    selectedcoins.splice(coinindex, 1, cointoadd)
+    $("#modalbodymessage").html("Please select which coin to unselect in favor of the coin you just clicked");
+    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize modal method)
+    $('#toomanycoinsmodal').modal('hide');
+    
+}
+
+function closedModal(){
+    $("#modalbodymessage").html("Please select which coin to unselect in favor of the coin you just clicked");
 }

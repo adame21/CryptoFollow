@@ -30,7 +30,7 @@ $(document).ready(function () {
         var divcreate = document.createElement("div");
         for (var i = 0; i < 100; i++) {
             console.log(coins[i]);
-            divcreate.innerHTML += "\n            <div class=\"card text-dark bg-primary m-auto makeinline\" id=\"" + coins[i].id + i + "\" style=\"max-width: 18rem;\">\n                <div class=\"card-header\">\n                    <div class=\"flexalign\">\n                        <span class=\"coinsymbol\">" + coins[i].symbol + "</span>\n                        <label class=\"switch\">\n                            <input type=\"checkbox\">\n                            <span class=\"slider round\"></span>\n                        </label>\n                    </div>\n                </div>\n                <div class=\"card-body\">\n                    <div class=\"\">\n                        <h5 class=\"card-title coinname\">" + coins[i].name + "</h5>\n                        <button type=\"button\" class=\"btn btn-secondary\" data-toggle=\"collapse\" href=\"#collapseExample" + i + "\" role=\"button\"\n                        aria-expanded=\"false\" aria-controls=\"collapseExample" + i + "\" onclick=\"moreInfo('" + coins[i].id + "')\">More info</button>\n                    </div>\n                </div>\n                <div class=\"collapse\" id=\"collapseExample" + i + "\">\n                    <div class=\" card-body\" id=\"" + coins[i].id + "\">\n                        \n                    </div>\n                </div>\n            </div>";
+            divcreate.innerHTML += "\n            <div class=\"card text-dark bg-primary m-auto makeinline\" id=\"" + coins[i].id + i + "\" style=\"max-width: 18rem;\">\n                <div class=\"card-header\">\n                    <div class=\"flexalign\">\n                        <span class=\"coinsymbol\">" + coins[i].symbol.toUpperCase() + "</span>\n                        <label class=\"switch\">\n                            <input type=\"checkbox\" id=\"" + coins[i].id + coins[i].symbol + "\" onchange=\"selectedCoinUpdate(this,'" + coins[i].symbol + "')\"> \n                            <span class=\"slider round\"></span>\n                        </label>\n                    </div>\n                </div>\n                <div class=\"card-body\">\n                    <div class=\"\">\n                        <h5 class=\"card-title coinname\">" + coins[i].name + "</h5>\n                        <button type=\"button\" class=\"btn btn-secondary\" data-toggle=\"collapse\" href=\"#collapseExample" + i + "\" role=\"button\"\n                        aria-expanded=\"false\" aria-controls=\"collapseExample" + i + "\" onclick=\"moreInfo('" + coins[i].id + "')\">More info</button>\n                    </div>\n                </div>\n                <div class=\"collapse\" id=\"collapseExample" + i + "\">\n                    <div class=\" card-body\" id=\"" + coins[i].id + "\">\n                        \n                    </div>\n                </div>\n            </div>";
             $("#pagecont").append(divcreate);
         }
     }
@@ -41,9 +41,9 @@ $(document).ready(function () {
         $("#loadingcircle").remove();
     }
 });
+var selectedcoins = [];
 function moreInfo(coinid) {
     var coin = JSON.parse(localStorage.getItem(coinid));
-    // console.log(coin.time);
     if (coin != null) {
         console.log("local storage is not null amigo");
         if (coin.time + 120000 < Date.now()) {
@@ -125,4 +125,48 @@ function startInfoLoader(coinid) {
 }
 function stopInfoLoader(coinid) {
     $("#loadingcircle" + coinid).remove();
+}
+function selectedCoinUpdate(cointoggle, coinsymbol) {
+    var uppercoinsymbol = coinsymbol.toUpperCase();
+    if (selectedcoins.length >= 5 && cointoggle.checked) {
+        console.log("too many coins");
+        console.log(coinsymbol);
+        cointoggle.checked = false;
+        var modalbody = document.createElement("div");
+        modalbody.innerHTML = "";
+        for (var i = 0; i < selectedcoins.length; i++) {
+            modalbody.innerHTML += "\n                <div class=\"modalbodycoin bg-primary text-light m-2\" onclick=\"changeSelected(this.innerHTML,'" + coinsymbol + "')\">" + selectedcoins[i] + "</div>\n            ";
+        }
+        $("#modalbodymessage").append(modalbody);
+        //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize modal method)
+        $('#toomanycoinsmodal').modal({ backdrop: 'static', keyboard: false });
+        //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize modal method)
+        $('#toomanycoinsmodal').modal('show');
+    }
+    else {
+        console.log(cointoggle);
+        if (cointoggle.checked) {
+            selectedcoins.push(uppercoinsymbol);
+            console.log(selectedcoins);
+        }
+        else {
+            var coinindex = selectedcoins.indexOf(uppercoinsymbol);
+            console.log(coinindex);
+            selectedcoins.splice(coinindex, 1);
+            console.log(selectedcoins);
+        }
+    }
+}
+function changeSelected(cointoremove, cointoadd) {
+    console.log(cointoremove);
+    console.log(cointoadd);
+    var coinindex = selectedcoins.indexOf(cointoremove);
+    console.log(coinindex);
+    selectedcoins.splice(coinindex, 1, cointoadd);
+    $("#modalbodymessage").html("Please select which coin to unselect in favor of the coin you just clicked");
+    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize modal method)
+    $('#toomanycoinsmodal').modal('hide');
+}
+function closedModal() {
+    $("#modalbodymessage").html("Please select which coin to unselect in favor of the coin you just clicked");
 }

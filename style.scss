@@ -30,11 +30,13 @@
     /*single card styling*/
     
     .coinsymbol{
-        color: black;
+        font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+        color: #F8F9FA;
         font-size: 1.8em;
     }
     .coinname{
-        color: black;
+        font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+        color: #F8F9FA;
         font-size: 1.1em;
     }
     .flexalign{
@@ -60,8 +62,13 @@
     
     
     
-    
-    
+    /*modal coins styling */
+    .modalbodycoin{
+        display: inline-block;
+        width: 15%;
+        padding: 1em;
+        border-radius: 6px;
+    }
     
     
     
@@ -197,6 +204,20 @@
     }
 
 
+    /*modal coins styling */
+    .modalbodycoin{
+        display: inline-block;
+        width: 15%;
+        padding: 1em;
+        border-radius: 6px;
+    }
+
+
+
+
+
+
+
 
         /*Toggler CSS*/
     .switch {
@@ -328,6 +349,16 @@
     }
 
 
+
+
+    /*modal coins styling */
+    .modalbodycoin{
+        display: inline-block;
+        width: 26%;
+        padding: 1em;
+        border-radius: 6px;
+    }
+    
 
 
 
