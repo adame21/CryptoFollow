@@ -7,86 +7,100 @@ $(document).ready(function () {
         success: (result) => {
             $("#navcont").append(result);
             getCoins();
+
         },
         error: (error) => {
             $("#navcont").html(`Failed to retrieve navbar, check for missing files, error code:${error.statusText}${error.status}`);
         }
     })
 
-
-    function getCoins(): void {
-        startLoader();
-        $.ajax({
-            type: "GET",
-            url: `https://api.coingecko.com/api/v3/coins/list`,
-            success: (result) => {
-                stopLoader();
-                console.log(result);
-                homeStart(result);
-            },
-            error: (error) => {
-                stopLoader();
-                $("#pagecont").html(`Could not retrieve data from api error:${error.statusText}${error.status}`);
-            }
+    $.ajax({
+        type: "GET",
+        url: "Pages/TooManyCoinsModal.html",
+        success: (result) => {
+            $("#modalcont").append(result);
+        },
+        error: (error) => {
+            console.log("Failed to retrieve Modal file");
+        }
+    })
 
 
 
 
-        })
-    }
-    function homeStart(coins: any[]): void {
-        var divcreate = document.createElement("div");
 
-        for (var i = 0; i < 100; i++) {
-            console.log(coins[i]);
-            divcreate.innerHTML += `
-            <div class="card text-dark bg-primary m-auto makeinline" id="${coins[i].id}${i}" style="max-width: 18rem;">
-                <div class="card-header">
-                    <div class="flexalign">
-                        <span class="coinsymbol">${coins[i].symbol.toUpperCase()}</span>
-                        <label class="switch">
-                            <input type="checkbox" id="${coins[i].id}${coins[i].symbol}" onchange="selectedCoinUpdate(this,'${coins[i].symbol}')"> 
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="">
-                        <h5 class="card-title coinname">${coins[i].name}</h5>
-                        <button type="button" class="btn btn-secondary" data-toggle="collapse" href="#collapseExample${i}" role="button"
-                        aria-expanded="false" aria-controls="collapseExample${i}" onclick="moreInfo('${coins[i].id}')">More info</button>
-                    </div>
-                    <div class="collapse" id="collapseExample${i}">
-                        <div class="card-body" id="${coins[i].id}">
-                        
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-            $("#pagecont").append(divcreate);
-
-
-
+});
+function getCoins(): void {
+    startLoader();
+    $.ajax({
+        type: "GET",
+        url: `https://api.coingecko.com/api/v3/coins/list`,
+        success: (result) => {
+            stopLoader();
+            primeButtons();
+            // console.log(result);
+            homeStart(result);
+        },
+        error: (error) => {
+            stopLoader();
+            $("#pagecont").html(`Could not retrieve data from api error:${error.statusText}${error.status}`);
         }
 
 
+
+
+    })
+}
+
+function homeStart(coins: any[]): void {
+
+    var divcreate = document.createElement("div");
+
+    for (var i = 0; i < 100; i++) {
+        // console.log(coins[i]);
+        divcreate.innerHTML += `
+        <div class="card text-dark bg-primary m-auto makeinline" id="${coins[i].id}${i}" style="max-width: 18rem;">
+            <div class="card-header">
+                <div class="flexalign">
+                    <span class="coinsymbol">${coins[i].symbol.toUpperCase()}</span>
+                    <label class="switch">
+                        <input type="checkbox" id="${coins[i].id}${coins[i].symbol}" onchange="selectedCoinUpdate(this,'${coins[i].symbol}')"> 
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="">
+                    <h5 class="card-title coinname">${coins[i].name}</h5>
+                    <button type="button" class="btn btn-secondary" data-toggle="collapse" href="#collapseExample${i}" role="button"
+                    aria-expanded="false" aria-controls="collapseExample${i}" onclick="moreInfo('${coins[i].id}')">More info</button>
+                </div>
+                <div class="collapse" id="collapseExample${i}">
+                    <div class="card-body" id="${coins[i].id}">
+                    
+                    </div>
+                </div>
+            </div>
+        </div>`;
+        $("#pagecont").append(divcreate);
     }
 
 
-    function startLoader() {
-        $("#pagecont").append(`
-        <div class="d-flex justify-content-center" id="loadingcircle">
-        <div class="spinner-border text-primary" role="status">
-        <span class="sr-only">Loading...</span>
-        </div>
-        </div>
-        `);
-    }
-    function stopLoader() {
-        $("#loadingcircle").remove();
-    }
+}
 
-});
+
+function startLoader() {
+    $("#pagecont").append(`
+    <div class="d-flex justify-content-center" id="loadingcircle">
+    <div class="spinner-border text-primary" role="status">
+    <span class="sr-only">Loading...</span>
+    </div>
+    </div>
+    `);
+}
+function stopLoader() {
+    $("#loadingcircle").remove();
+}
 
 var selectedcoins: any[] = [];
 
@@ -198,7 +212,7 @@ function stopInfoLoader(coinid: any) {
 function selectedCoinUpdate(cointoggle: any, coinsymbol: any) {
     var uppercoinsymbol: any = coinsymbol.toUpperCase();
     var cointoggleid = cointoggle.getAttribute("id");
-    
+
 
     if (selectedcoins.length >= 5 && cointoggle.checked) {
         console.log("too many coins");
@@ -217,10 +231,10 @@ function selectedCoinUpdate(cointoggle: any, coinsymbol: any) {
 
         $("#modalbodymessage").append(modalbody);
         //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize modal method)
-        $('#toomanycoinsmodal').modal({backdrop: 'static', keyboard: false})
+        $('#toomanycoinsmodal').modal({ backdrop: 'static', keyboard: false })
         //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize modal method)
         $('#toomanycoinsmodal').modal('show');
-        
+
 
     }
     else {
@@ -246,7 +260,7 @@ function selectedCoinUpdate(cointoggle: any, coinsymbol: any) {
 
 }
 
-function changeSelected(cointoremove: string, cointoadd: string,cointoaddid:any,cointoremoveid:any) {
+function changeSelected(cointoremove: string, cointoadd: string, cointoaddid: any, cointoremoveid: any) {
     console.log(cointoremoveid);
     console.log(cointoaddid);
     console.log(cointoremove);
@@ -256,7 +270,7 @@ function changeSelected(cointoremove: string, cointoadd: string,cointoaddid:any,
     let coinindex: number = selectedcoins.findIndex(function (coins) {
         return coins.id == cointoremoveid;
     })
-    
+
     console.log(coinindex);
 
 
@@ -274,9 +288,280 @@ function changeSelected(cointoremove: string, cointoadd: string,cointoaddid:any,
     $(`#${cointoaddid}`)[0].checked = true;
     //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize checked value)
     $(`#${cointoremoveid}`)[0].checked = false;
-    
+
 }
 
-function closedModal(){
+function closedModal() {
     $("#modalbodymessage").html("Please select which coin to unselect in favor of the coin you just clicked");
+}
+
+function primeButtons() {
+    console.log("primebuttons works");
+    $("#homepage").on('click', () => {
+        $("#graphcont").addClass("disappear");
+        $("#graphcont").html("");
+        $("#pagecont").removeClass("disappear");
+        // getCoins();
+        // primeButtons();
+    })
+
+
+
+
+    $("#livereport").on('click', () => {
+        startLoader();
+        $.ajax({
+            type: "GET",
+            url: "Pages/Coingraph.html",
+            success: (result) => {
+                stopLoader();
+                $("#pagecont").addClass("disappear");
+                $("#graphcont").removeClass("disappear");
+                $("#graphcont").html("");
+                $("#graphcont").append(result);
+                getPrices();
+                // paintGraph();
+            },
+            error: (error) => {
+                stopLoader();
+                console.log("error getting graph page");
+            }
+        })
+
+
+
+
+    })
+
+
+
+    $("#about").on('click', () => {
+        console.log("at some point ill make the about page");
+
+
+
+
+
+
+
+
+
+    })
+}
+
+function paintGraph(apiinfo: any) {
+    console.log(apiinfo);
+    console.log(apiinfo.time);
+
+
+
+
+    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
+    var infoarr = Object.entries(apiinfo);
+    var graphdata: any[] = [];
+
+    for (var i = 0; i < (infoarr.length - 1); i++) {
+        var randomcolor = getRandomColor();
+        graphdata[i] =
+            {
+                type: "line",
+                showInLegend: true,
+                name: infoarr[i][0],
+                markerType: "circle",
+                lineDashType: "solid",
+                xValueFormatString: "DD MMM, YYYY",
+                color: randomcolor,
+                dataPoints: [
+                    { x: apiinfo.time, y: infoarr[i][1].USD },
+                ]
+            };
+    }
+    console.log(graphdata);
+
+    console.log(infoarr);
+    console.log(infoarr[0][0]);
+    console.log(infoarr[0][1]);
+
+
+
+    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
+    var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        theme: "light2",
+        title: {
+            text: "Selected CryptoCurrencies price in USD"
+        },
+        axisX: {
+            valueFormatString: "HH SS",
+            crosshair: {
+                enabled: true,
+                snapToDataPoint: true
+            }
+        },
+        axisY: {
+            title: "Price in USD",
+            crosshair: {
+                enabled: true
+            }
+        },
+        toolTip: {
+            shared: true
+        },
+        legend: {
+            cursor: "pointer",
+            verticalAlign: "bottom",
+            horizontalAlign: "left",
+            dockInsidePlotArea: true,
+            itemclick: toogleDataSeries
+        },
+
+
+
+
+
+
+
+        data: graphdata
+        // {
+        //     type: "line",
+        //     showInLegend: true,
+        //     name: infoarr[0][0],
+        //     markerType: "circle",
+        //     lineDashType: "solid",
+        //     xValueFormatString: "DD MMM, YYYY",
+        //     color: "#F08080",
+        //     dataPoints: [
+        //         { x: apiinfo.time, y: infoarr[0][1].USD },
+        //         // { x: new Date(), y: 50 },
+        //         // { x: new Date(), y: 60 },
+        //         // { x: new Date(), y: 70 },
+
+        //     ]
+        // },
+
+        // {
+        //     type: "line",
+        //     showInLegend: true,
+        //     name: infoarr[1][0],
+        //     markerType: "circle",
+        //     lineDashType: "solid",
+        //     dataPoints: [
+        //         { x: apiinfo.time, y: infoarr[1][1].USD },
+        //         // { x: new Date(), y: 110 },
+        //         // { x: new Date(), y: 120 },
+        //         // { x: new Date(), y: 130 },
+
+        //     ]
+        // },
+        // {
+        //     type: "line",
+        //     showInLegend: true,
+        //     name: infoarr[2][0],
+        //     markerType: "circle",
+        //     lineDashType: "solid",
+        //     dataPoints: [
+        //         { x: apiinfo.time, y: infoarr[2][1].USD },
+        //         // { x: new Date(), y: 110 },
+        //         // { x: new Date(), y: 120 },
+        //         // { x: new Date(), y: 130 },
+        //     ]
+        // },
+        // {
+        //     type: "line",
+        //     showInLegend: true,
+        //     name: infoarr[3][0],
+        //     markerType: "circle",
+        //     lineDashType: "solid",
+        //     dataPoints: [
+        //         { x: apiinfo.time, y: infoarr[3][1].USD },
+        //         // { x: new Date(), y: 110 },
+        //         // { x: new Date(), y: 120 },
+        //         // { x: new Date(), y: 130 },
+        //     ]
+        // },
+        // {
+        //     type: "line",
+        //     showInLegend: true,
+        //     name: infoarr[4][0],
+        //     markerType: "circle",
+        //     lineDashType: "solid",
+        //     dataPoints: [
+        //         { x: apiinfo.time, y: infoarr[4][1].USD },
+        //         // { x: new Date(), y: 110 },
+        //         // { x: new Date(), y: 120 },
+        //         // { x: new Date(), y: 130 },
+        //     ]
+        // },
+
+    });
+    chart.render();
+
+    function toogleDataSeries(e) {
+        if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+            e.dataSeries.visible = false;
+        } else {
+            e.dataSeries.visible = true;
+        }
+        chart.render();
+    }
+}
+
+
+
+function getPrices() {
+    var urlarr: any[] = [];
+    var sendurl: string = "";
+    console.log(selectedcoins);
+    for (var i = 0; i < selectedcoins.length; i++) {
+        if (i == (selectedcoins.length - 1)) {
+            urlarr[i] = selectedcoins[i].code;
+            sendurl += urlarr[i]
+            console.log(sendurl);
+        }
+        else {
+            urlarr[i] = selectedcoins[i].code;
+            sendurl += urlarr[i] + ",";
+            console.log(sendurl);
+
+        }
+
+    }
+    console.log(urlarr);
+    console.log(sendurl);
+
+    $.ajax({
+        type: "GET",
+        url: `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${sendurl}&tsyms=USD`,
+        success: (result) => {
+            if (result.Response == "Error") {
+                alert("Selected coins have no value to show in the API, going back home");
+                $("#graphcont").addClass("disappear");
+                $("#graphcont").html("");
+                $("#pagecont").removeClass("disappear");
+            }
+            else {
+                console.log("it didnt fail what now");
+                // result.time = new Date().getHours() + ":" + new Date().getMinutes();
+                result.time = new Date();
+                paintGraph(result);
+
+            }
+        },
+        error: (error) => {
+            console.log("got into error");
+            console.log(error);
+        }
+    })
+
+
+
+}
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
 }

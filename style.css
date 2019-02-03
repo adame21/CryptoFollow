@@ -3,6 +3,9 @@
   body, html {
     height: 100%;
   }
+  .disappear {
+    display: none;
+  }
   .parallax {
     /* The image used */
     background-image: url("images/temporary.jpg");
@@ -28,7 +31,7 @@
   .coinname {
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     color: #F8F9FA;
-    font-size: 1.1em;
+    font-size: 1.05em;
   }
   .flexalign {
     display: -webkit-box;
@@ -252,7 +255,7 @@
   }
   .coinname {
     color: black;
-    font-size: 1.1em;
+    font-size: 1.05em;
   }
   .flexalign {
     display: -webkit-box;

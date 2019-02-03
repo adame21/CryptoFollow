@@ -3,6 +3,9 @@
     body, html {
         height: 100%;
     }
+    .disappear{
+        display: none;
+    }
     
     
     .parallax {
@@ -37,7 +40,7 @@
     .coinname{
         font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
         color: #F8F9FA;
-        font-size: 1.1em;
+        font-size: 1.05em;
     }
     .flexalign{
         display: flex;
@@ -326,7 +329,7 @@
     }
     .coinname{
         color: black;
-        font-size: 1.1em;
+        font-size: 1.05em;
     }
     .flexalign{
         display: flex;
