@@ -56,10 +56,10 @@ $(document).ready(function () {
                         <button type="button" class="btn btn-secondary" data-toggle="collapse" href="#collapseExample${i}" role="button"
                         aria-expanded="false" aria-controls="collapseExample${i}" onclick="moreInfo('${coins[i].id}')">More info</button>
                     </div>
-                </div>
-                <div class="collapse" id="collapseExample${i}">
-                    <div class=" card-body" id="${coins[i].id}">
+                    <div class="collapse" id="collapseExample${i}">
+                        <div class="card-body" id="${coins[i].id}">
                         
+                        </div>
                     </div>
                 </div>
             </div>`;
@@ -110,10 +110,12 @@ function moreInfo(coinid: any): void {
                     var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
                     var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
                     $("#" + coinid).html(`
+                    <div class="moreinfocont">
                     <img src="${result.image.small}" />
                     <span class="displaycurrency">USD: ${usdprice.toFixed(4)}$</span>
                     <span class="displaycurrency">EUR: ${eurprice.toFixed(4)}€</span>
                     <span class="displaycurrency">ILS: ${ilsprice.toFixed(4)}₪</span>
+                    </div>
                     `);
                 },
                 error: (error) => {
@@ -130,10 +132,12 @@ function moreInfo(coinid: any): void {
             var eurprice = Math.floor(coin.market_data.current_price.eur * 10000) / 10000;
             var ilsprice = Math.floor(coin.market_data.current_price.ils * 10000) / 10000;
             $("#" + coinid).html(`
+            <div class="moreinfocont">
             <img src="${coin.image.small}" />
             <span class="displaycurrency">USD: ${usdprice.toFixed(4)}$</span>
             <span class="displaycurrency">EUR: ${eurprice.toFixed(4)}€</span>
             <span class="displaycurrency">ILS: ${ilsprice.toFixed(4)}₪</span>
+            </div>
             `);
         }
     }
@@ -154,10 +158,12 @@ function moreInfo(coinid: any): void {
                 var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
                 var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
                 $("#" + coinid).html(`
+                <div class="moreinfocont">
                 <img src="${result.image.small}" />
                 <span class="displaycurrency">USD: ${usdprice.toFixed(4)}$</span>
                 <span class="displaycurrency">EUR: ${eurprice.toFixed(4)}€</span>
                 <span class="displaycurrency">ILS: ${ilsprice.toFixed(4)}₪</span>
+                </div>
                 `);
             },
             error: (error) => {
