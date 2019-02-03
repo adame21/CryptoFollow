@@ -96,29 +96,6 @@ function moreInfo(coinid) {
             }
         });
     }
-    // $.ajax({
-    //     type: "GET",
-    //     url: `https://api.coingecko.com/api/v3/coins/${coinid}`,
-    //     success: (result) => {
-    //         stopInfoLoader(coinid);
-    //         result.time = Date.now();
-    //         localStorage.setItem(coinid, JSON.stringify(result));
-    //         var usdprice = Math.floor(result.market_data.current_price.usd * 10000) / 10000;
-    //         var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
-    //         var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
-    //         $("#" + coinid).html(`
-    //         <img src="${result.image.small}" />
-    //         <span class="displaycurrency">USD: ${usdprice.toFixed(4)}$</span>
-    //         <span class="displaycurrency">EUR: ${eurprice.toFixed(4)}€</span>
-    //         <span class="displaycurrency">ILS: ${ilsprice.toFixed(4)}₪</span>
-    //         `);
-    //     },
-    //     error: (error) => {
-    //         $("#" + coinid).html(`
-    //         Could not retrieve data from api error:${error.statusText}${error.status}
-    //         `)
-    //     }
-    // })
 }
 function startInfoLoader(coinid) {
     $("#" + coinid).append("\n    <div class=\"d-flex justify-content-center\" id=\"loadingcircle" + coinid + "\">\n    <div class=\"spinner-border\" role=\"status\">\n    <span class=\"sr-only\">Loading...</span>\n    </div>\n    </div>\n    ");
@@ -128,6 +105,7 @@ function stopInfoLoader(coinid) {
 }
 function selectedCoinUpdate(cointoggle, coinsymbol) {
     var uppercoinsymbol = coinsymbol.toUpperCase();
+    var cointoggleid = cointoggle.getAttribute("id");
     if (selectedcoins.length >= 5 && cointoggle.checked) {
         console.log("too many coins");
         console.log(coinsymbol);
@@ -135,7 +113,8 @@ function selectedCoinUpdate(cointoggle, coinsymbol) {
         var modalbody = document.createElement("div");
         modalbody.innerHTML = "";
         for (var i = 0; i < selectedcoins.length; i++) {
-            modalbody.innerHTML += "\n                <div class=\"modalbodycoin bg-primary text-light m-2\" onclick=\"changeSelected(this.innerHTML,'" + coinsymbol + "')\">" + selectedcoins[i] + "</div>\n            ";
+            console.log(selectedcoins[i]);
+            modalbody.innerHTML += "\n                <div  class=\"modalbodycoin bg-primary text-light m-2\" onclick=\"changeSelected(this.innerHTML,'" + uppercoinsymbol + "','" + cointoggleid + "','" + selectedcoins[i].id + "')\">" + selectedcoins[i].code + "</div>\n            ";
         }
         $("#modalbodymessage").append(modalbody);
         //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize modal method)
@@ -146,26 +125,44 @@ function selectedCoinUpdate(cointoggle, coinsymbol) {
     else {
         console.log(cointoggle);
         if (cointoggle.checked) {
-            selectedcoins.push(uppercoinsymbol);
+            selectedcoins.push({
+                "code": uppercoinsymbol,
+                "id": cointoggleid
+            });
             console.log(selectedcoins);
         }
         else {
-            var coinindex = selectedcoins.indexOf(uppercoinsymbol);
+            //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize jquery)
+            var coinindex = selectedcoins.findIndex(function (coins) {
+                return coins.id == cointoggleid;
+            });
             console.log(coinindex);
             selectedcoins.splice(coinindex, 1);
             console.log(selectedcoins);
         }
     }
 }
-function changeSelected(cointoremove, cointoadd) {
+function changeSelected(cointoremove, cointoadd, cointoaddid, cointoremoveid) {
+    console.log(cointoremoveid);
+    console.log(cointoaddid);
     console.log(cointoremove);
     console.log(cointoadd);
-    var coinindex = selectedcoins.indexOf(cointoremove);
+    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize jquery)
+    var coinindex = selectedcoins.findIndex(function (coins) {
+        return coins.id == cointoremoveid;
+    });
     console.log(coinindex);
-    selectedcoins.splice(coinindex, 1, cointoadd);
+    selectedcoins.splice(coinindex, 1, {
+        "code": cointoadd,
+        "id": cointoaddid
+    });
     $("#modalbodymessage").html("Please select which coin to unselect in favor of the coin you just clicked");
     //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize modal method)
     $('#toomanycoinsmodal').modal('hide');
+    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize checked value)
+    $("#" + cointoaddid)[0].checked = true;
+    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize checked value)
+    $("#" + cointoremoveid)[0].checked = false;
 }
 function closedModal() {
     $("#modalbodymessage").html("Please select which coin to unselect in favor of the coin you just clicked");
