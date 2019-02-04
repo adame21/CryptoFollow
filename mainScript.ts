@@ -30,6 +30,9 @@ $(document).ready(function () {
 
 
 });
+
+
+
 function getCoins(): void {
     startLoader();
     $.ajax({
@@ -103,6 +106,8 @@ function stopLoader() {
 }
 
 var selectedcoins: any[] = [];
+var graphdata: any[] = [];
+var updater;
 
 function moreInfo(coinid: any): void {
     var coin = JSON.parse(localStorage.getItem(coinid));
@@ -244,6 +249,7 @@ function selectedCoinUpdate(cointoggle: any, coinsymbol: any) {
                 "code": uppercoinsymbol,
                 "id": cointoggleid
             });
+            
             console.log(selectedcoins);
         }
         else {
@@ -253,6 +259,7 @@ function selectedCoinUpdate(cointoggle: any, coinsymbol: any) {
             })
             console.log(coinindex);
             selectedcoins.splice(coinindex, 1);
+            
             console.log(selectedcoins);
 
         }
@@ -278,6 +285,7 @@ function changeSelected(cointoremove: string, cointoadd: string, cointoaddid: an
         "code": cointoadd,
         "id": cointoaddid
     });
+    
 
 
 
@@ -298,6 +306,8 @@ function closedModal() {
 function primeButtons() {
     console.log("primebuttons works");
     $("#homepage").on('click', () => {
+        clearInterval(updater);
+        graphdata.splice(0,graphdata.length);
         $("#graphcont").addClass("disappear");
         $("#graphcont").html("");
         $("#pagecont").removeClass("disappear");
@@ -316,9 +326,9 @@ function primeButtons() {
             success: (result) => {
                 stopLoader();
                 $("#pagecont").addClass("disappear");
-                $("#graphcont").removeClass("disappear");
                 $("#graphcont").html("");
                 $("#graphcont").append(result);
+                $("#graphcont").removeClass("disappear");
                 getPrices();
                 // paintGraph();
             },
@@ -349,7 +359,7 @@ function primeButtons() {
     })
 }
 
-function paintGraph(apiinfo: any) {
+function paintGraph(apiinfo: any, sendurl: any) {
     console.log(apiinfo);
     console.log(apiinfo.time);
 
@@ -358,7 +368,7 @@ function paintGraph(apiinfo: any) {
 
     //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
     var infoarr = Object.entries(apiinfo);
-    var graphdata: any[] = [];
+
 
     for (var i = 0; i < (infoarr.length - 1); i++) {
         var randomcolor = getRandomColor();
@@ -379,20 +389,19 @@ function paintGraph(apiinfo: any) {
     console.log(graphdata);
 
     console.log(infoarr);
-    console.log(infoarr[0][0]);
-    console.log(infoarr[0][1]);
+    // graphdata.length = selectedcoins.length;
 
 
 
     //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
-    var chart = new CanvasJS.Chart("chartContainer", {
+    window.chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
         theme: "light2",
         title: {
             text: "Selected CryptoCurrencies price in USD"
         },
         axisX: {
-            valueFormatString: "HH SS",
+            valueFormatString: "hh:mm:ss",
             crosshair: {
                 enabled: true,
                 snapToDataPoint: true
@@ -422,79 +431,10 @@ function paintGraph(apiinfo: any) {
 
 
         data: graphdata
-        // {
-        //     type: "line",
-        //     showInLegend: true,
-        //     name: infoarr[0][0],
-        //     markerType: "circle",
-        //     lineDashType: "solid",
-        //     xValueFormatString: "DD MMM, YYYY",
-        //     color: "#F08080",
-        //     dataPoints: [
-        //         { x: apiinfo.time, y: infoarr[0][1].USD },
-        //         // { x: new Date(), y: 50 },
-        //         // { x: new Date(), y: 60 },
-        //         // { x: new Date(), y: 70 },
-
-        //     ]
-        // },
-
-        // {
-        //     type: "line",
-        //     showInLegend: true,
-        //     name: infoarr[1][0],
-        //     markerType: "circle",
-        //     lineDashType: "solid",
-        //     dataPoints: [
-        //         { x: apiinfo.time, y: infoarr[1][1].USD },
-        //         // { x: new Date(), y: 110 },
-        //         // { x: new Date(), y: 120 },
-        //         // { x: new Date(), y: 130 },
-
-        //     ]
-        // },
-        // {
-        //     type: "line",
-        //     showInLegend: true,
-        //     name: infoarr[2][0],
-        //     markerType: "circle",
-        //     lineDashType: "solid",
-        //     dataPoints: [
-        //         { x: apiinfo.time, y: infoarr[2][1].USD },
-        //         // { x: new Date(), y: 110 },
-        //         // { x: new Date(), y: 120 },
-        //         // { x: new Date(), y: 130 },
-        //     ]
-        // },
-        // {
-        //     type: "line",
-        //     showInLegend: true,
-        //     name: infoarr[3][0],
-        //     markerType: "circle",
-        //     lineDashType: "solid",
-        //     dataPoints: [
-        //         { x: apiinfo.time, y: infoarr[3][1].USD },
-        //         // { x: new Date(), y: 110 },
-        //         // { x: new Date(), y: 120 },
-        //         // { x: new Date(), y: 130 },
-        //     ]
-        // },
-        // {
-        //     type: "line",
-        //     showInLegend: true,
-        //     name: infoarr[4][0],
-        //     markerType: "circle",
-        //     lineDashType: "solid",
-        //     dataPoints: [
-        //         { x: apiinfo.time, y: infoarr[4][1].USD },
-        //         // { x: new Date(), y: 110 },
-        //         // { x: new Date(), y: 120 },
-        //         // { x: new Date(), y: 130 },
-        //     ]
-        // },
 
     });
-    chart.render();
+    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
+    window.chart.render();
 
     function toogleDataSeries(e) {
         if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
@@ -502,8 +442,15 @@ function paintGraph(apiinfo: any) {
         } else {
             e.dataSeries.visible = true;
         }
-        chart.render();
+        //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
+        window.chart.render();
     }
+        updater = setInterval(() => {
+        updateGraph(sendurl);
+
+
+
+    }, 2000);
 }
 
 
@@ -526,8 +473,7 @@ function getPrices() {
         }
 
     }
-    console.log(urlarr);
-    console.log(sendurl);
+
 
     $.ajax({
         type: "GET",
@@ -541,9 +487,8 @@ function getPrices() {
             }
             else {
                 console.log("it didnt fail what now");
-                // result.time = new Date().getHours() + ":" + new Date().getMinutes();
                 result.time = new Date();
-                paintGraph(result);
+                paintGraph(result, sendurl);
 
             }
         },
@@ -564,4 +509,48 @@ function getRandomColor() {
         color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+}
+
+function updateGraph(sendurl) {
+    console.log("updated graph");
+
+    $.ajax({
+        type: "GET",
+        url: `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${sendurl}&tsyms=USD`,
+        success: (result) => {
+            result.time = new Date();
+            updateGraphSuccess(result);
+        },
+        error: (error) => {
+            console.log("failed retrieving new information for graph");
+        }
+    })
+}
+
+function updateGraphSuccess(newInfo) {
+
+    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
+    var updategraphinfo = Object.entries(newInfo);
+
+    // console.log(updategraphinfo);
+
+    // console.log(graphdata);
+
+    for (var i = 0; i < (updategraphinfo.length - 1); i++) {
+
+        graphdata[i].dataPoints.push({
+            x: newInfo.time,
+            y: updategraphinfo[i][1].USD
+        });
+    }
+    console.log(graphdata);
+
+    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
+    window.chart.render();
+
+
+
+
+
+
 }
