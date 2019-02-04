@@ -306,19 +306,25 @@ function closedModal() {
 function primeButtons() {
     console.log("primebuttons works");
     $("#homepage").on('click', () => {
+        $("#livereport").removeClass("linkdisable");
+        $("#about").removeClass("linkdisable");
         clearInterval(updater);
         graphdata.splice(0,graphdata.length);
         $("#graphcont").addClass("disappear");
         $("#graphcont").html("");
         $("#pagecont").removeClass("disappear");
-        // getCoins();
-        // primeButtons();
+        $("#livereport").removeClass("active");
+        $("#about").removeClass("active");
+        $("#homepage").addClass("active");
+
     })
 
 
 
 
     $("#livereport").on('click', () => {
+        $("#livereport").addClass("linkdisable");
+        $("#about").removeClass("linkdisable");
         startLoader();
         $.ajax({
             type: "GET",
@@ -329,6 +335,9 @@ function primeButtons() {
                 $("#graphcont").html("");
                 $("#graphcont").append(result);
                 $("#graphcont").removeClass("disappear");
+                $("#homepage").removeClass("active");
+                $("#about").removeClass("active");
+                $("#livereport").addClass("active");
                 getPrices();
                 // paintGraph();
             },
@@ -346,12 +355,18 @@ function primeButtons() {
 
 
     $("#about").on('click', () => {
+         
+        $("#about").addClass("linkdisable");
+        $("#livereport").removeClass("linkdisable");
+        $("#pagecont").addClass("disappear");
+        $("#graphcont").html("");
+        $("#graphcont").addClass("disappear");
         console.log("at some point ill make the about page");
-
-
-
-
-
+        clearInterval(updater);
+        graphdata.splice(0,graphdata.length);
+        $("#homepage").removeClass("active");
+        $("#livereport").removeClass("active");
+        $("#about").addClass("active");
 
 
 
@@ -420,7 +435,7 @@ function paintGraph(apiinfo: any, sendurl: any) {
             cursor: "pointer",
             verticalAlign: "bottom",
             horizontalAlign: "left",
-            dockInsidePlotArea: true,
+            dockInsidePlotArea: false,
             itemclick: toogleDataSeries
         },
 
@@ -484,6 +499,9 @@ function getPrices() {
                 $("#graphcont").addClass("disappear");
                 $("#graphcont").html("");
                 $("#pagecont").removeClass("disappear");
+                $("#livereport").removeClass("active");
+                $("#about").removeClass("active");
+                $("#homepage").addClass("active");
             }
             else {
                 console.log("it didnt fail what now");
