@@ -112,7 +112,7 @@ function moreInfo(coinid) {
     }
 }
 function startInfoLoader(coinid) {
-    $("#" + coinid).append("\n    <div class=\"d-flex justify-content-center\" id=\"loadingcircle" + coinid + "\">\n    <div class=\"spinner-border\" role=\"status\">\n    <span class=\"sr-only\">Loading...</span>\n    </div>\n    </div>\n    ");
+    $("#" + coinid).append("\n    <div class=\"d-flex justify-content-center\" id=\"loadingcircle" + coinid + "\">\n    <div class=\"spinner-border text-light\" role=\"status\">\n    <span class=\"sr-only\">Loading...</span>\n    </div>\n    </div>\n    ");
 }
 function stopInfoLoader(coinid) {
     $("#loadingcircle" + coinid).remove();
@@ -426,7 +426,7 @@ function setupSearch() {
             }, 6000);
         }
         else {
-            jQuery('html,body').animate({ scrollTop: 0 }, 0);
+            jQuery('html,body').animate({ scrollTop: 0 }, 2000);
             $("#searchmsg").html("Could not find a matching coin");
             setTimeout(function () {
                 $("#searchmsg").html("");

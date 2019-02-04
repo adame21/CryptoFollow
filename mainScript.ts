@@ -198,7 +198,7 @@ function moreInfo(coinid: any): void {
 function startInfoLoader(coinid: any) {
     $("#" + coinid).append(`
     <div class="d-flex justify-content-center" id="loadingcircle${coinid}">
-    <div class="spinner-border" role="status">
+    <div class="spinner-border text-light" role="status">
     <span class="sr-only">Loading...</span>
     </div>
     </div>
@@ -626,7 +626,7 @@ function setupSearch() {
             }, 6000)
         }
         else{
-            jQuery('html,body').animate({scrollTop:0},0);
+            jQuery('html,body').animate({scrollTop:0},2000);
             $("#searchmsg").html("Could not find a matching coin");
             setTimeout(()=>{
                 $("#searchmsg").html("");
