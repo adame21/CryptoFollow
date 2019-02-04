@@ -9,9 +9,12 @@
   .linkdisable {
     pointer-events: none;
   }
+  .searchhighlight {
+    border: 3px solid red;
+  }
   .parallax {
     /* The image used */
-    background-image: url("images/temporary.jpg");
+    background-image: url("images/temporary2.jpg");
     /* Full height */
     height: 100%;
     /* Create the parallax scrolling effect */
@@ -25,6 +28,9 @@
     text-align: center;
     margin-top: 7em;
   }
+  #aboutcont {
+    margin-top: 7em;
+  }
   /*graph chart styling (made for responsiveness)*/
   .chartstyle {
     width: 100%;
@@ -35,11 +41,14 @@
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     color: #F8F9FA;
     font-size: 1.8em;
+    opacity: 1;
   }
   .coinname {
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     color: #F8F9FA;
     font-size: 1.05em;
+    opacity: 1;
+    word-wrap: break-word;
   }
   .flexalign {
     display: -webkit-box;
@@ -57,10 +66,16 @@
     margin-top: 1em !important;
     margin-bottom: 1em !important;
     min-width: 230px;
+    opacity: 0.8;
   }
   /*more info styling  */
   .displaycurrency {
     display: block;
+    opacity: 1;
+    color: #F8F9FA;
+  }
+  .coinimg {
+    opacity: 1;
   }
   /*modal coins styling */
   .modalbodycoin {
@@ -68,6 +83,26 @@
     width: 15%;
     padding: 1em;
     border-radius: 6px;
+  }
+  /*About styling*/
+  .slightopac {
+    opacity: 0.8;
+  }
+  /*scrolltopbutton*/
+  #scrolltopbutton {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 4px;
   }
   /*Toggler CSS*/
   .switch {
@@ -134,9 +169,12 @@
   .linkdisable {
     pointer-events: none;
   }
+  .searchhighlight {
+    border: 3px solid red;
+  }
   .parallax {
     /* The image used */
-    background-image: url("images/temporary.jpg");
+    background-image: url("images/temporary2.jpg");
     /* Full height */
     height: 100%;
     /* Create the parallax scrolling effect */
@@ -150,6 +188,9 @@
     text-align: center;
     margin-top: 7em;
   }
+  #aboutcont {
+    margin-top: 7em;
+  }
   /*graph chart styling (made for responsiveness)*/
   .chartstyle {
     width: 100%;
@@ -157,12 +198,17 @@
   }
   /*single card styling*/
   .coinsymbol {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     color: #F8F9FA;
     font-size: 1.8em;
+    opacity: 1;
   }
   .coinname {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     color: #F8F9FA;
     font-size: 0.9em;
+    opacity: 1;
+    word-wrap: break-word;
   }
   .flexalign {
     display: -webkit-box;
@@ -180,10 +226,16 @@
     margin-top: 1em !important;
     margin-bottom: 1em !important;
     min-width: 230px;
+    opacity: 0.8;
   }
   /*more info styling  */
   .displaycurrency {
     display: block;
+    opacity: 1;
+    color: #F8F9FA;
+  }
+  .coinimg {
+    opacity: 1;
   }
   /*modal coins styling */
   .modalbodycoin {
@@ -191,6 +243,26 @@
     width: 15%;
     padding: 1em;
     border-radius: 6px;
+  }
+  /*About styling*/
+  .slightopac {
+    opacity: 0.8;
+  }
+  /*scrolltopbutton*/
+  #scrolltopbutton {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 4px;
   }
   /*Toggler CSS*/
   .switch {
@@ -257,9 +329,12 @@
   .linkdisable {
     pointer-events: none;
   }
+  .searchhighlight {
+    border: 3px solid red;
+  }
   .parallax {
     /* The image used */
-    background-image: url("images/temporary.jpg");
+    background-image: url("images/temporary2.jpg");
     /* Full height */
     height: 100%;
     /* Create the parallax scrolling effect */
@@ -273,20 +348,27 @@
     text-align: center;
     margin-top: 7em;
   }
+  #aboutcont {
+    margin-top: 7em;
+  }
   /*graph chart styling (made for responsiveness)*/
   .chartstyle {
     width: 100%;
     height: 300px;
   }
-  /*graph fix attempt*/
   /*single card styling*/
   .coinsymbol {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     color: #F8F9FA;
     font-size: 1.8em;
+    opacity: 1;
   }
   .coinname {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     color: #F8F9FA;
     font-size: 1.05em;
+    opacity: 1;
+    word-wrap: break-word;
   }
   .flexalign {
     display: -webkit-box;
@@ -304,10 +386,16 @@
     margin-top: 2em !important;
     margin-bottom: 2em !important;
     min-width: 230px;
+    opacity: 0.8;
   }
   /*more info styling  */
   .displaycurrency {
     display: block;
+    opacity: 1;
+    color: #F8F9FA;
+  }
+  .coinimg {
+    opacity: 1;
   }
   /*modal coins styling */
   .modalbodycoin {
@@ -315,6 +403,26 @@
     width: 26%;
     padding: 1em;
     border-radius: 6px;
+  }
+  /*About styling*/
+  .slightopac {
+    opacity: 0.8;
+  }
+  /*scrolltopbutton*/
+  #scrolltopbutton {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 4px;
   }
   /*Toggler CSS*/
   .switch {
@@ -387,6 +495,33 @@
   .chartstyle {
     width: 100%;
     height: 550px;
+  }
+}
+
+#wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#div2 {
+  width: 30%;
+}
+
+#div1 {
+  width: 70%;
+}
+
+@media (max-width: 767px) {
+  #wrapper {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+  #div1,
+  #div2 {
+    width: auto;
   }
 }
 /*# sourceMappingURL=style.css.map */

@@ -1,5 +1,5 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">CryptoFollow</a>
+    <a class="navbar-brand text-primary" href="#">CryptoFollow</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -11,15 +11,20 @@
                 <a class="nav-link active" href="#" id="homepage">Home <span class="sr-only"></span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" id="livereport">Live reports</a>
+                <a class="nav-link" href="#" id="livereport">Live report</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#" id="about">About</a>
             </li>
+            <li class="nav-item">
+                <span class="nav-link active text-info">Selected coins: <span id="selectedcoins" class="text-warning"></span></span>
+            </li>
+
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+        <span id="searchmsg" class="text-warning mr-3"></span>
+        <form id="searchform" class="form-inline my-2 my-lg-0" action="javascript:void(0);">
+            <input id="searchinput" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button id="searchbtn" class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
         </form>
     </div>
 </nav>

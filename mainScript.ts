@@ -41,6 +41,7 @@ function getCoins(): void {
         success: (result) => {
             stopLoader();
             primeButtons();
+            setupSearch();
             // console.log(result);
             homeStart(result);
         },
@@ -62,10 +63,10 @@ function homeStart(coins: any[]): void {
     for (var i = 0; i < 100; i++) {
         // console.log(coins[i]);
         divcreate.innerHTML += `
-        <div class="card text-dark bg-primary m-auto makeinline" id="${coins[i].id}${i}" style="max-width: 18rem;">
+        <div class="card text-dark bg-dark m-auto makeinline" id="${coins[i].id}${i}" style="max-width: 18rem;">
             <div class="card-header">
                 <div class="flexalign">
-                    <span class="coinsymbol">${coins[i].symbol.toUpperCase()}</span>
+                    <span class="coinsymbol" id="${coins[i].symbol.toUpperCase()}">${coins[i].symbol.toUpperCase()}</span>
                     <label class="switch">
                         <input type="checkbox" id="${coins[i].id}${coins[i].symbol}" onchange="selectedCoinUpdate(this,'${coins[i].symbol}')"> 
                         <span class="slider round"></span>
@@ -75,10 +76,10 @@ function homeStart(coins: any[]): void {
             <div class="card-body">
                 <div class="">
                     <h5 class="card-title coinname">${coins[i].name}</h5>
-                    <button type="button" class="btn btn-secondary" data-toggle="collapse" href="#collapseExample${i}" role="button"
-                    aria-expanded="false" aria-controls="collapseExample${i}" onclick="moreInfo('${coins[i].id}')">More info</button>
+                    <button type="button" class="btn btn-secondary" data-toggle="collapse" href="#collapseIdentity${i}" role="button"
+                    aria-expanded="false" aria-controls="collapseIdentity${i}" onclick="moreInfo('${coins[i].id}')">More info</button>
                 </div>
-                <div class="collapse" id="collapseExample${i}">
+                <div class="collapse" id="collapseIdentity${i}">
                     <div class="card-body" id="${coins[i].id}">
                     
                     </div>
@@ -130,7 +131,7 @@ function moreInfo(coinid: any): void {
                     var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
                     $("#" + coinid).html(`
                     <div class="moreinfocont">
-                    <img src="${result.image.small}" />
+                    <img class="coinimg" src="${result.image.small}" />
                     <span class="displaycurrency">USD: ${usdprice.toFixed(4)}$</span>
                     <span class="displaycurrency">EUR: ${eurprice.toFixed(4)}€</span>
                     <span class="displaycurrency">ILS: ${ilsprice.toFixed(4)}₪</span>
@@ -152,7 +153,7 @@ function moreInfo(coinid: any): void {
             var ilsprice = Math.floor(coin.market_data.current_price.ils * 10000) / 10000;
             $("#" + coinid).html(`
             <div class="moreinfocont">
-            <img src="${coin.image.small}" />
+            <img class="coinimg" src="${coin.image.small}" />
             <span class="displaycurrency">USD: ${usdprice.toFixed(4)}$</span>
             <span class="displaycurrency">EUR: ${eurprice.toFixed(4)}€</span>
             <span class="displaycurrency">ILS: ${ilsprice.toFixed(4)}₪</span>
@@ -178,7 +179,7 @@ function moreInfo(coinid: any): void {
                 var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
                 $("#" + coinid).html(`
                 <div class="moreinfocont">
-                <img src="${result.image.small}" />
+                <img class="coinimg" src="${result.image.small}" />
                 <span class="displaycurrency">USD: ${usdprice.toFixed(4)}$</span>
                 <span class="displaycurrency">EUR: ${eurprice.toFixed(4)}€</span>
                 <span class="displaycurrency">ILS: ${ilsprice.toFixed(4)}₪</span>
@@ -249,7 +250,7 @@ function selectedCoinUpdate(cointoggle: any, coinsymbol: any) {
                 "code": uppercoinsymbol,
                 "id": cointoggleid
             });
-            
+            updateCoinSpan();
             console.log(selectedcoins);
         }
         else {
@@ -259,7 +260,7 @@ function selectedCoinUpdate(cointoggle: any, coinsymbol: any) {
             })
             console.log(coinindex);
             selectedcoins.splice(coinindex, 1);
-            
+            updateCoinSpan();
             console.log(selectedcoins);
 
         }
@@ -285,7 +286,7 @@ function changeSelected(cointoremove: string, cointoadd: string, cointoaddid: an
         "code": cointoadd,
         "id": cointoaddid
     });
-    
+    updateCoinSpan();
 
 
 
@@ -308,14 +309,16 @@ function primeButtons() {
     $("#homepage").on('click', () => {
         $("#livereport").removeClass("linkdisable");
         $("#about").removeClass("linkdisable");
+        $("#aboutcont").html("");
         clearInterval(updater);
-        graphdata.splice(0,graphdata.length);
+        graphdata.splice(0, graphdata.length);
         $("#graphcont").addClass("disappear");
         $("#graphcont").html("");
         $("#pagecont").removeClass("disappear");
         $("#livereport").removeClass("active");
         $("#about").removeClass("active");
         $("#homepage").addClass("active");
+        $("#searchform").removeClass("disappear")
 
     })
 
@@ -325,6 +328,7 @@ function primeButtons() {
     $("#livereport").on('click', () => {
         $("#livereport").addClass("linkdisable");
         $("#about").removeClass("linkdisable");
+        $("#aboutcont").html("");
         startLoader();
         $.ajax({
             type: "GET",
@@ -332,9 +336,13 @@ function primeButtons() {
             success: (result) => {
                 stopLoader();
                 $("#pagecont").addClass("disappear");
+
                 $("#graphcont").html("");
                 $("#graphcont").append(result);
                 $("#graphcont").removeClass("disappear");
+
+                $("#searchform").addClass("disappear")
+
                 $("#homepage").removeClass("active");
                 $("#about").removeClass("active");
                 $("#livereport").addClass("active");
@@ -355,19 +363,21 @@ function primeButtons() {
 
 
     $("#about").on('click', () => {
-         
+
         $("#about").addClass("linkdisable");
         $("#livereport").removeClass("linkdisable");
         $("#pagecont").addClass("disappear");
         $("#graphcont").html("");
         $("#graphcont").addClass("disappear");
-        console.log("at some point ill make the about page");
+
+        $("#searchform").addClass("disappear")
+
         clearInterval(updater);
-        graphdata.splice(0,graphdata.length);
+        graphdata.splice(0, graphdata.length);
         $("#homepage").removeClass("active");
         $("#livereport").removeClass("active");
         $("#about").addClass("active");
-
+        getAbout();
 
 
 
@@ -460,7 +470,7 @@ function paintGraph(apiinfo: any, sendurl: any) {
         //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
         window.chart.render();
     }
-        updater = setInterval(() => {
+    updater = setInterval(() => {
         updateGraph(sendurl);
 
 
@@ -496,6 +506,9 @@ function getPrices() {
         success: (result) => {
             if (result.Response == "Error") {
                 alert("Selected coins have no value to show in the API, going back home");
+                $("#livereport").removeClass("linkdisable");
+                $("#about").removeClass("linkdisable");
+                $("#searchform").removeClass("disappear")
                 $("#graphcont").addClass("disappear");
                 $("#graphcont").html("");
                 $("#pagecont").removeClass("disappear");
@@ -572,3 +585,82 @@ function updateGraphSuccess(newInfo) {
 
 
 }
+
+function getAbout() {
+    $.ajax({
+        type: "GET",
+        url: "Pages/About.html",
+        success: (result) => {
+            console.log(result);
+            console.log((document.getElementById("aboutcont")));
+            $("#aboutcont").append(result);
+
+
+
+        },
+        error: (error) => {
+            console.log("failed to retrieve about page");
+        }
+    })
+}
+
+
+
+
+
+
+function setupSearch() {
+    $("#searchbtn").on('click', () => {
+        console.log("search happened");
+        //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
+        var searchvalue = $("#searchinput").val().toUpperCase();
+        console.log(searchvalue);
+        console.log($("#" + searchvalue));
+        if ($("#" + searchvalue).offset() !== undefined) {
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#" + searchvalue).offset().top - 100
+            }, 2000);
+            $("#" + searchvalue).addClass("searchhighlight");
+            setTimeout(() => {
+                $("#" + searchvalue).removeClass("searchhighlight");
+            }, 6000)
+        }
+        else{
+            jQuery('html,body').animate({scrollTop:0},0);
+            $("#searchmsg").html("Could not find a matching coin");
+            setTimeout(()=>{
+                $("#searchmsg").html("");
+            },5000);
+        }
+    });
+}
+
+function updateCoinSpan() {
+    var coinspandata = "";
+
+    for (var i = 0; i < selectedcoins.length; i++) {
+        if (i == (selectedcoins.length - 1)) {
+            coinspandata += selectedcoins[i].code;
+        }
+        else {
+            coinspandata += selectedcoins[i].code + ", ";
+        }
+    }
+
+    $("#selectedcoins").html(coinspandata);
+}
+
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("scrolltopbutton").style.display = "block";
+  } else {
+    document.getElementById("scrolltopbutton").style.display = "none";
+  }
+}
+
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
