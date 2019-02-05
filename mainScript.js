@@ -30,7 +30,7 @@ function getCoins() {
             stopLoader();
             primeButtons();
             setupSearch();
-            // console.log(result);
+            console.log(result);
             homeStart(result);
         },
         error: function (error) {
@@ -40,12 +40,14 @@ function getCoins() {
     });
 }
 function homeStart(coins) {
+    //comment about the comment below me - its a damn liar and dont listen to it, its VERY needed for the search, and you just fucked it up so go fix it
+    //important note! this line: 'id="${coins[i].symbol.toUpperCase()+"a1"}"' isn't necessary, but is kept inside for further development options, also the a1 part is to avoid a bug with 1337 that i still dont 100% understand but its fixed
     var divcreate = document.createElement("div");
     for (var i = 0; i < 100; i++) {
         // console.log(coins[i]);
-        divcreate.innerHTML += "\n        <div class=\"card text-dark bg-dark m-auto makeinline\" id=\"" + coins[i].id + i + "\" style=\"max-width: 18rem;\">\n            <div class=\"card-header\">\n                <div class=\"flexalign\">\n                    <span class=\"coinsymbol\" id=\"" + coins[i].symbol.toUpperCase() + "\">" + coins[i].symbol.toUpperCase() + "</span>\n                    <label class=\"switch\">\n                        <input type=\"checkbox\" id=\"" + coins[i].id + coins[i].symbol + "\" onchange=\"selectedCoinUpdate(this,'" + coins[i].symbol + "')\"> \n                        <span class=\"slider round\"></span>\n                    </label>\n                </div>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"\">\n                    <h5 class=\"card-title coinname\">" + coins[i].name + "</h5>\n                    <button type=\"button\" class=\"btn btn-secondary\" data-toggle=\"collapse\" href=\"#collapseIdentity" + i + "\" role=\"button\"\n                    aria-expanded=\"false\" aria-controls=\"collapseIdentity" + i + "\" onclick=\"moreInfo('" + coins[i].id + "')\">More info</button>\n                </div>\n                <div class=\"collapse\" id=\"collapseIdentity" + i + "\">\n                    <div class=\"card-body\" id=\"" + coins[i].id + "\">\n                    \n                    </div>\n                </div>\n            </div>\n        </div>";
-        $("#pagecont").append(divcreate);
+        divcreate.innerHTML += "\n        <div class=\"card text-dark bg-dark m-auto makeinline\" id=\"" + coins[i].id + i + "\" style=\"max-width: 18rem;\">\n            <div class=\"card-header\">\n                <div class=\"flexalign\">\n                    <span class=\"coinsymbol\" id=\"" + (coins[i].symbol.toUpperCase() + "a1") + "\">" + coins[i].symbol.toUpperCase() + "</span>\n                    <label class=\"switch\">\n                        <input type=\"checkbox\" id=\"" + coins[i].id + coins[i].symbol + "\" onchange=\"selectedCoinUpdate(this,'" + coins[i].symbol + "')\"> \n                        <span class=\"slider round\"></span>\n                    </label>\n                </div>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"\">\n                    <h5 class=\"card-title coinname\">" + coins[i].name + "</h5>\n                    <button type=\"button\" class=\"btn btn-secondary\" data-toggle=\"collapse\" href=\"#collapseIdentity" + i + "\" role=\"button\"\n                    aria-expanded=\"false\" aria-controls=\"collapseIdentity" + i + "\" onclick=\"moreInfo('" + coins[i].id + "')\">More info</button>\n                </div>\n                <div class=\"collapse\" id=\"collapseIdentity" + i + "\">\n                    <div class=\"card-body\" id=\"" + coins[i].id + "\">\n                    \n                    </div>\n                </div>\n            </div>\n        </div>";
     }
+    $("#pagecont").append(divcreate);
 }
 function startLoader() {
     $("#pagecont").append("\n    <div class=\"d-flex justify-content-center\" id=\"loadingcircle\">\n    <div class=\"spinner-border text-primary\" role=\"status\">\n    <span class=\"sr-only\">Loading...</span>\n    </div>\n    </div>\n    ");
@@ -57,6 +59,7 @@ var selectedcoins = [];
 var graphdata = [];
 var updater;
 function moreInfo(coinid) {
+    console.log(coinid);
     var coin = JSON.parse(localStorage.getItem(coinid));
     if (coin != null) {
         console.log("local storage is not null amigo");
@@ -416,13 +419,13 @@ function setupSearch() {
         var searchvalue = $("#searchinput").val().toUpperCase();
         console.log(searchvalue);
         console.log($("#" + searchvalue));
-        if ($("#" + searchvalue).offset() !== undefined) {
+        if ($("#" + searchvalue + "a1").offset() !== undefined) {
             $([document.documentElement, document.body]).animate({
-                scrollTop: $("#" + searchvalue).offset().top - 100
+                scrollTop: $("#" + searchvalue + "a1").offset().top - 100
             }, 2000);
-            $("#" + searchvalue).addClass("searchhighlight");
+            $("#" + searchvalue + "a1").addClass("searchhighlight");
             setTimeout(function () {
-                $("#" + searchvalue).removeClass("searchhighlight");
+                $("#" + searchvalue + "a1").removeClass("searchhighlight");
             }, 6000);
         }
         else {
@@ -449,10 +452,10 @@ function updateCoinSpan() {
 window.onscroll = function () { scrollFunction(); };
 function scrollFunction() {
     if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        document.getElementById("scrolltopbutton").style.display = "block";
+        document.getElementById("scrolltopbuttonx").style.display = "block";
     }
     else {
-        document.getElementById("scrolltopbutton").style.display = "none";
+        document.getElementById("scrolltopbuttonx").style.display = "none";
     }
 }
 function topFunction() {

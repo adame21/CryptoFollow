@@ -109,7 +109,7 @@
     
     
     /*scrolltopbutton*/
-    #scrolltopbutton{
+    .scrolltopbuttonxx{
         display: none;
         position: fixed;
         bottom: 20px;
@@ -124,7 +124,6 @@
         padding: 15px;
         border-radius: 4px;
     }
-    
     
     
     /*Toggler CSS*/
@@ -297,7 +296,7 @@
     }
 
     /*scrolltopbutton*/
-    #scrolltopbutton{
+    .scrolltopbuttonxx{
         display: none;
         position: fixed;
         bottom: 20px;
@@ -493,7 +492,7 @@
 
     
     /*scrolltopbutton*/
-    #scrolltopbutton{
+    .scrolltopbuttonxx{
         display: none;
         position: fixed;
         bottom: 20px;
@@ -607,7 +606,7 @@
     width: 70%;
     
   }
-  
+  /*responsiveness for the about page*/
   @media (max-width: 767px) {
     #wrapper {
       flex-direction: column;

@@ -42,7 +42,7 @@ function getCoins(): void {
             stopLoader();
             primeButtons();
             setupSearch();
-            // console.log(result);
+            console.log(result);
             homeStart(result);
         },
         error: (error) => {
@@ -57,6 +57,8 @@ function getCoins(): void {
 }
 
 function homeStart(coins: any[]): void {
+    //comment about the comment below me - its a damn liar and dont listen to it, its VERY needed for the search, and you just fucked it up so go fix it
+    //important note! this line: 'id="${coins[i].symbol.toUpperCase()+"a1"}"' isn't necessary, but is kept inside for further development options, also the a1 part is to avoid a bug with 1337 that i still dont 100% understand but its fixed
 
     var divcreate = document.createElement("div");
 
@@ -66,7 +68,7 @@ function homeStart(coins: any[]): void {
         <div class="card text-dark bg-dark m-auto makeinline" id="${coins[i].id}${i}" style="max-width: 18rem;">
             <div class="card-header">
                 <div class="flexalign">
-                    <span class="coinsymbol" id="${coins[i].symbol.toUpperCase()}">${coins[i].symbol.toUpperCase()}</span>
+                    <span class="coinsymbol" id="${coins[i].symbol.toUpperCase() + "a1"}">${coins[i].symbol.toUpperCase()}</span>
                     <label class="switch">
                         <input type="checkbox" id="${coins[i].id}${coins[i].symbol}" onchange="selectedCoinUpdate(this,'${coins[i].symbol}')"> 
                         <span class="slider round"></span>
@@ -86,9 +88,9 @@ function homeStart(coins: any[]): void {
                 </div>
             </div>
         </div>`;
-        $("#pagecont").append(divcreate);
+        
     }
-
+    $("#pagecont").append(divcreate);
 
 }
 
@@ -111,6 +113,7 @@ var graphdata: any[] = [];
 var updater;
 
 function moreInfo(coinid: any): void {
+    console.log(coinid);
     var coin = JSON.parse(localStorage.getItem(coinid));
     if (coin != null) {
         console.log("local storage is not null amigo");
@@ -616,21 +619,21 @@ function setupSearch() {
         var searchvalue = $("#searchinput").val().toUpperCase();
         console.log(searchvalue);
         console.log($("#" + searchvalue));
-        if ($("#" + searchvalue).offset() !== undefined) {
+        if ($("#" + searchvalue+ "a1").offset() !== undefined) {
             $([document.documentElement, document.body]).animate({
-                scrollTop: $("#" + searchvalue).offset().top - 100
+                scrollTop: $("#" + searchvalue+ "a1").offset().top - 100
             }, 2000);
-            $("#" + searchvalue).addClass("searchhighlight");
+            $("#" + searchvalue+ "a1").addClass("searchhighlight");
             setTimeout(() => {
-                $("#" + searchvalue).removeClass("searchhighlight");
+                $("#" + searchvalue+ "a1").removeClass("searchhighlight");
             }, 6000)
         }
-        else{
-            jQuery('html,body').animate({scrollTop:0},2000);
+        else {
+            jQuery('html,body').animate({ scrollTop: 0 }, 2000);
             $("#searchmsg").html("Could not find a matching coin");
-            setTimeout(()=>{
+            setTimeout(() => {
                 $("#searchmsg").html("");
-            },5000);
+            }, 5000);
         }
     });
 }
@@ -650,17 +653,17 @@ function updateCoinSpan() {
     $("#selectedcoins").html(coinspandata);
 }
 
-window.onscroll = function() {scrollFunction()};
+window.onscroll = function () { scrollFunction() };
 
 function scrollFunction() {
-  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-    document.getElementById("scrolltopbutton").style.display = "block";
-  } else {
-    document.getElementById("scrolltopbutton").style.display = "none";
-  }
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        document.getElementById("scrolltopbuttonx").style.display = "block";
+    } else {
+        document.getElementById("scrolltopbuttonx").style.display = "none";
+    }
 }
 
 function topFunction() {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-  }
+}

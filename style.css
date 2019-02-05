@@ -89,7 +89,7 @@
     opacity: 0.8;
   }
   /*scrolltopbutton*/
-  #scrolltopbutton {
+  .scrolltopbuttonxx {
     display: none;
     position: fixed;
     bottom: 20px;
@@ -249,7 +249,7 @@
     opacity: 0.8;
   }
   /*scrolltopbutton*/
-  #scrolltopbutton {
+  .scrolltopbuttonxx {
     display: none;
     position: fixed;
     bottom: 20px;
@@ -409,7 +409,7 @@
     opacity: 0.8;
   }
   /*scrolltopbutton*/
-  #scrolltopbutton {
+  .scrolltopbuttonxx {
     display: none;
     position: fixed;
     bottom: 20px;
@@ -512,6 +512,7 @@
   width: 70%;
 }
 
+/*responsiveness for the about page*/
 @media (max-width: 767px) {
   #wrapper {
     -webkit-box-orient: vertical;
