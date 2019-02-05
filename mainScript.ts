@@ -39,7 +39,7 @@ function getCoins(): void {
         type: "GET",
         url: `https://api.coingecko.com/api/v3/coins/list`,
         success: (result) => {
-            stopLoader();
+            
             primeButtons();
             setupSearch();
             console.log(result);
@@ -59,12 +59,12 @@ function getCoins(): void {
 function homeStart(coins: any[]): void {
     //comment about the comment below me - its a damn liar and dont listen to it, its VERY needed for the search, and you just fucked it up so go fix it
     //important note! this line: 'id="${coins[i].symbol.toUpperCase()+"a1"}"' isn't necessary, but is kept inside for further development options, also the a1 part is to avoid a bug with 1337 that i still dont 100% understand but its fixed
-
+    var divmaterial = "";
     var divcreate = document.createElement("div");
 
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < coins.length; i++) {
         // console.log(coins[i]);
-        divcreate.innerHTML += `
+        divmaterial += `
         <div class="card text-dark bg-dark m-auto makeinline" id="${coins[i].id}${i}" style="max-width: 18rem;">
             <div class="card-header">
                 <div class="flexalign">
@@ -90,7 +90,9 @@ function homeStart(coins: any[]): void {
         </div>`;
         
     }
+    divcreate.innerHTML = divmaterial;
     $("#pagecont").append(divcreate);
+    stopLoader();
 
 }
 
