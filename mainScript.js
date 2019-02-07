@@ -414,6 +414,7 @@ function getAbout() {
         }
     });
 }
+//testing git
 function setupSearch() {
     $("#searchbtn").on('click', function () {
         console.log("search happened");
