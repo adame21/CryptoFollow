@@ -244,7 +244,7 @@ function changeSelected(cointoremove: string, cointoadd: string, cointoaddid: an
         "id": cointoaddid
     });
     updateCoinSpan();
-    $("#modalbodymessage").html("Please select which coin to unselect in favor of the coin you just clicked");
+    $("#modalbodymessage").html("Please select which coin to unfollow in favor of the coin you just clicked");
     //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
     $('#toomanycoinsmodal').modal('hide');
     //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
@@ -255,7 +255,7 @@ function changeSelected(cointoremove: string, cointoadd: string, cointoaddid: an
 
 
 function closedModal() {
-    $("#modalbodymessage").html("Please select which coin to unselect in favor of the coin you just clicked");
+    $("#modalbodymessage").html("Please select which coin to unfollow in favor of the coin you just clicked");
 }
 
 
