@@ -7,12 +7,12 @@ $(document).ready(function () {
         success: (result) => {
             $("#navcont").append(result);
             getCoins();
-
         },
         error: (error) => {
             $("#navcont").html(`Failed to retrieve navbar, check for missing files, error code:${error.statusText}${error.status}`);
         }
     })
+
 
     $.ajax({
         type: "GET",
@@ -24,13 +24,10 @@ $(document).ready(function () {
             console.log("Failed to retrieve Modal file");
         }
     })
-
-
-
-
-
 });
-
+var selectedcoins: any[] = [];
+var graphdata: any[] = [];
+var updater: number;
 
 
 function getCoins(): void {
@@ -39,7 +36,6 @@ function getCoins(): void {
         type: "GET",
         url: `https://api.coingecko.com/api/v3/coins/list`,
         success: (result) => {
-            
             primeButtons();
             setupSearch();
             console.log(result);
@@ -49,21 +45,14 @@ function getCoins(): void {
             stopLoader();
             $("#pagecont").html(`Could not retrieve data from api error:${error.statusText}${error.status}`);
         }
-
-
-
-
     })
 }
 
 function homeStart(coins: any[]): void {
-    //comment about the comment below me - its a damn liar and dont listen to it, its VERY needed for the search, and you just fucked it up so go fix it
-    //important note! this line: 'id="${coins[i].symbol.toUpperCase()+"a1"}"' isn't necessary, but is kept inside for further development options, also the a1 part is to avoid a bug with 1337 that i still dont 100% understand but its fixed
     var divmaterial = "";
     var divcreate = document.createElement("div");
-
-    for (var i = 0; i < coins.length; i++) {
-        // console.log(coins[i]);
+    //coins.length - in the for loop change "100" to this to get all coins! #CHANGECOINAMOUNT
+    for (var i = 0; i < 100; i++) {
         divmaterial += `
         <div class="card text-dark bg-dark m-auto makeinline" id="${coins[i].id}${i}" style="max-width: 18rem;">
             <div class="card-header">
@@ -88,12 +77,10 @@ function homeStart(coins: any[]): void {
                 </div>
             </div>
         </div>`;
-        
     }
     divcreate.innerHTML = divmaterial;
     $("#pagecont").append(divcreate);
     stopLoader();
-
 }
 
 
@@ -106,31 +93,25 @@ function startLoader() {
     </div>
     `);
 }
+
+
 function stopLoader() {
     $("#loadingcircle").remove();
 }
 
-var selectedcoins: any[] = [];
-var graphdata: any[] = [];
-var updater;
 
 function moreInfo(coinid: any): void {
-    console.log(coinid);
     var coin = JSON.parse(localStorage.getItem(coinid));
     if (coin != null) {
-        console.log("local storage is not null amigo");
         if (coin.time + 120000 < Date.now()) {
-            console.log("shit man this data is too old now lemme get a fresh copy");
             startInfoLoader(coinid);
             $.ajax({
                 type: "GET",
                 url: `https://api.coingecko.com/api/v3/coins/${coinid}`,
                 success: (result) => {
                     stopInfoLoader(coinid);
-
                     result.time = Date.now();
                     localStorage.setItem(coinid, JSON.stringify(result));
-
                     var usdprice = Math.floor(result.market_data.current_price.usd * 10000) / 10000;
                     var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
                     var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
@@ -146,7 +127,7 @@ function moreInfo(coinid: any): void {
                 error: (error) => {
                     $("#" + coinid).html(`
                     Could not retrieve data from api error:${error.statusText}${error.status}
-                    `)
+                    `);
                 }
             })
         }
@@ -168,17 +149,14 @@ function moreInfo(coinid: any): void {
     }
     //This else is in case whats in localstorage is null(it is checked by ID)
     else {
-        console.log("there is nothing with the correct id in the localstorage so ima get you a fresh copy of all those coins and shit");
         startInfoLoader(coinid);
         $.ajax({
             type: "GET",
             url: `https://api.coingecko.com/api/v3/coins/${coinid}`,
             success: (result) => {
                 stopInfoLoader(coinid);
-
                 result.time = Date.now();
                 localStorage.setItem(coinid, JSON.stringify(result));
-
                 var usdprice = Math.floor(result.market_data.current_price.usd * 10000) / 10000;
                 var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
                 var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
@@ -194,11 +172,12 @@ function moreInfo(coinid: any): void {
             error: (error) => {
                 $("#" + coinid).html(`
                 Could not retrieve data from api error:${error.statusText}${error.status}
-                `)
+                `);
             }
         })
     }
 }
+
 
 function startInfoLoader(coinid: any) {
     $("#" + coinid).append(`
@@ -209,25 +188,17 @@ function startInfoLoader(coinid: any) {
     </div>
     `);
 }
+
+
 function stopInfoLoader(coinid: any) {
     $(`#loadingcircle${coinid}`).remove();
 }
 
 
-
-
-
-
-
-
 function selectedCoinUpdate(cointoggle: any, coinsymbol: any) {
     var uppercoinsymbol: any = coinsymbol.toUpperCase();
     var cointoggleid = cointoggle.getAttribute("id");
-
-
     if (selectedcoins.length >= 5 && cointoggle.checked) {
-        console.log("too many coins");
-        console.log(coinsymbol);
         cointoggle.checked = false;
         var modalbody: any = document.createElement("div");
         modalbody.innerHTML = "";
@@ -236,81 +207,59 @@ function selectedCoinUpdate(cointoggle: any, coinsymbol: any) {
             modalbody.innerHTML += `
                 <div  class="modalbodycoin bg-primary text-light m-2" onclick="changeSelected(this.innerHTML,'${uppercoinsymbol}','${cointoggleid}','${selectedcoins[i].id}')">${selectedcoins[i].code}</div>
             `;
-
-
         }
-
         $("#modalbodymessage").append(modalbody);
-        //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize modal method)
+        //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
         $('#toomanycoinsmodal').modal({ backdrop: 'static', keyboard: false })
-        //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize modal method)
+        //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
         $('#toomanycoinsmodal').modal('show');
-
-
     }
     else {
-        console.log(cointoggle);
         if (cointoggle.checked) {
             selectedcoins.push({
                 "code": uppercoinsymbol,
                 "id": cointoggleid
             });
             updateCoinSpan();
-            console.log(selectedcoins);
         }
         else {
-            //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize jquery)
+            //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
             let coinindex: number = selectedcoins.findIndex(function (coins) {
                 return coins.id == cointoggleid;
             })
-            console.log(coinindex);
             selectedcoins.splice(coinindex, 1);
             updateCoinSpan();
-            console.log(selectedcoins);
-
         }
     }
-
 }
 
-function changeSelected(cointoremove: string, cointoadd: string, cointoaddid: any, cointoremoveid: any) {
-    console.log(cointoremoveid);
-    console.log(cointoaddid);
-    console.log(cointoremove);
-    console.log(cointoadd);
 
-    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize jquery)
+function changeSelected(cointoremove: string, cointoadd: string, cointoaddid: any, cointoremoveid: any) {
+    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
     let coinindex: number = selectedcoins.findIndex(function (coins) {
         return coins.id == cointoremoveid;
     })
-
-    console.log(coinindex);
-
-
     selectedcoins.splice(coinindex, 1, {
         "code": cointoadd,
         "id": cointoaddid
     });
     updateCoinSpan();
-
-
-
     $("#modalbodymessage").html("Please select which coin to unselect in favor of the coin you just clicked");
-    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize modal method)
+    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
     $('#toomanycoinsmodal').modal('hide');
-    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize checked value)
+    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
     $(`#${cointoaddid}`)[0].checked = true;
-    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript doesent recognize checked value)
+    //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
     $(`#${cointoremoveid}`)[0].checked = false;
-
 }
+
 
 function closedModal() {
     $("#modalbodymessage").html("Please select which coin to unselect in favor of the coin you just clicked");
 }
 
+
 function primeButtons() {
-    console.log("primebuttons works");
     $("#homepage").on('click', () => {
         $("#livereport").removeClass("linkdisable");
         $("#about").removeClass("linkdisable");
@@ -324,11 +273,7 @@ function primeButtons() {
         $("#about").removeClass("active");
         $("#homepage").addClass("active");
         $("#searchform").removeClass("disappear")
-
     })
-
-
-
 
     $("#livereport").on('click', () => {
         $("#livereport").addClass("linkdisable");
@@ -341,65 +286,41 @@ function primeButtons() {
             success: (result) => {
                 stopLoader();
                 $("#pagecont").addClass("disappear");
-
                 $("#graphcont").html("");
                 $("#graphcont").append(result);
                 $("#graphcont").removeClass("disappear");
-
                 $("#searchform").addClass("disappear")
-
                 $("#homepage").removeClass("active");
                 $("#about").removeClass("active");
                 $("#livereport").addClass("active");
                 getPrices();
-                // paintGraph();
             },
             error: (error) => {
                 stopLoader();
                 console.log("error getting graph page");
             }
         })
-
-
-
-
     })
 
-
-
     $("#about").on('click', () => {
-
         $("#about").addClass("linkdisable");
         $("#livereport").removeClass("linkdisable");
         $("#pagecont").addClass("disappear");
         $("#graphcont").html("");
         $("#graphcont").addClass("disappear");
-
         $("#searchform").addClass("disappear")
-
         clearInterval(updater);
         graphdata.splice(0, graphdata.length);
         $("#homepage").removeClass("active");
         $("#livereport").removeClass("active");
         $("#about").addClass("active");
         getAbout();
-
-
-
     })
 }
 
 function paintGraph(apiinfo: any, sendurl: any) {
-    console.log(apiinfo);
-    console.log(apiinfo.time);
-
-
-
-
     //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
     var infoarr = Object.entries(apiinfo);
-
-
     for (var i = 0; i < (infoarr.length - 1); i++) {
         var randomcolor = getRandomColor();
         graphdata[i] =
@@ -416,13 +337,6 @@ function paintGraph(apiinfo: any, sendurl: any) {
                 ]
             };
     }
-    console.log(graphdata);
-
-    console.log(infoarr);
-    // graphdata.length = selectedcoins.length;
-
-
-
     //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
     window.chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
@@ -453,18 +367,11 @@ function paintGraph(apiinfo: any, sendurl: any) {
             dockInsidePlotArea: false,
             itemclick: toogleDataSeries
         },
-
-
-
-
-
-
-
         data: graphdata
-
     });
     //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
     window.chart.render();
+
 
     function toogleDataSeries(e) {
         if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
@@ -477,33 +384,23 @@ function paintGraph(apiinfo: any, sendurl: any) {
     }
     updater = setInterval(() => {
         updateGraph(sendurl);
-
-
-
     }, 2000);
 }
-
 
 
 function getPrices() {
     var urlarr: any[] = [];
     var sendurl: string = "";
-    console.log(selectedcoins);
     for (var i = 0; i < selectedcoins.length; i++) {
         if (i == (selectedcoins.length - 1)) {
             urlarr[i] = selectedcoins[i].code;
             sendurl += urlarr[i]
-            console.log(sendurl);
         }
         else {
             urlarr[i] = selectedcoins[i].code;
             sendurl += urlarr[i] + ",";
-            console.log(sendurl);
-
         }
-
     }
-
 
     $.ajax({
         type: "GET",
@@ -522,21 +419,16 @@ function getPrices() {
                 $("#homepage").addClass("active");
             }
             else {
-                console.log("it didnt fail what now");
                 result.time = new Date();
                 paintGraph(result, sendurl);
-
             }
         },
         error: (error) => {
-            console.log("got into error");
-            console.log(error);
+            console.log("Error getting data from CryptoCompare");
         }
     })
-
-
-
 }
+
 
 function getRandomColor() {
     var letters = '0123456789ABCDEF';
@@ -547,9 +439,8 @@ function getRandomColor() {
     return color;
 }
 
-function updateGraph(sendurl) {
-    console.log("updated graph");
 
+function updateGraph(sendurl) {
     $.ajax({
         type: "GET",
         url: `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${sendurl}&tsyms=USD`,
@@ -563,86 +454,62 @@ function updateGraph(sendurl) {
     })
 }
 
-function updateGraphSuccess(newInfo) {
 
+function updateGraphSuccess(newInfo) {
     //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
     var updategraphinfo = Object.entries(newInfo);
-
-    // console.log(updategraphinfo);
-
-    // console.log(graphdata);
-
     for (var i = 0; i < (updategraphinfo.length - 1); i++) {
-
         graphdata[i].dataPoints.push({
             x: newInfo.time,
             y: updategraphinfo[i][1].USD
         });
     }
-    console.log(graphdata);
-
     //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
     window.chart.render();
-
-
-
-
-
-
 }
+
 
 function getAbout() {
     $.ajax({
         type: "GET",
         url: "Pages/About.html",
         success: (result) => {
-            console.log(result);
-            console.log((document.getElementById("aboutcont")));
             $("#aboutcont").append(result);
-
-
-
         },
         error: (error) => {
-            console.log("failed to retrieve about page");
+            $("#aboutcont").html("Failed retrieving About page");
         }
     })
 }
 
 
-//testing git
-
-
-
 function setupSearch() {
     $("#searchbtn").on('click', () => {
-        console.log("search happened");
-        //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
-        var searchvalue = $("#searchinput").val().toUpperCase();
-        console.log(searchvalue);
-        console.log($("#" + searchvalue));
-        if ($("#" + searchvalue+ "a1").offset() !== undefined) {
-            $([document.documentElement, document.body]).animate({
-                scrollTop: $("#" + searchvalue+ "a1").offset().top - 100
-            }, 2000);
-            $("#" + searchvalue+ "a1").addClass("searchhighlight");
-            setTimeout(() => {
-                $("#" + searchvalue+ "a1").removeClass("searchhighlight");
-            }, 6000)
+        if ($("#searchbtn").html() == "Search") {
+            //@ts-ignore - This line exists to avoid showing an error thats not really an error here. (typescript definitions issue)
+            var searchvalue = $("#searchinput").val().toUpperCase();
+            if ($("#" + searchvalue + "a1").length >= 1) {
+                $("#searchinput").hide(200);
+                $("#searchbtn").html("Return");
+                $("#pagecont .card.text-dark.bg-dark.m-auto.makeinline").not($("#" + searchvalue + "a1").parent().parent().parent()).hide(700);
+            }
+            else {
+                $("#searchinput").hide(200);
+                $("#searchmsg").html("Could not find a matching coin");
+                $("#searchbtn").html("Return");
+            }
         }
         else {
-            jQuery('html,body').animate({ scrollTop: 0 }, 2000);
-            $("#searchmsg").html("Could not find a matching coin");
-            setTimeout(() => {
-                $("#searchmsg").html("");
-            }, 5000);
+            $("#searchinput").show(200);
+            $("#searchbtn").html("Search");
+            $("#pagecont .card.text-dark.bg-dark.m-auto.makeinline").show(700);
+            $("#searchmsg").html("");
         }
     });
 }
 
 function updateCoinSpan() {
     var coinspandata = "";
-
     for (var i = 0; i < selectedcoins.length; i++) {
         if (i == (selectedcoins.length - 1)) {
             coinspandata += selectedcoins[i].code;
@@ -651,11 +518,12 @@ function updateCoinSpan() {
             coinspandata += selectedcoins[i].code + ", ";
         }
     }
-
     $("#selectedcoins").html(coinspandata);
 }
 
+//this part is only for the scroll to top button
 window.onscroll = function () { scrollFunction() };
+
 
 function scrollFunction() {
     if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
@@ -664,6 +532,7 @@ function scrollFunction() {
         document.getElementById("scrolltopbuttonx").style.display = "none";
     }
 }
+
 
 function topFunction() {
     document.body.scrollTop = 0;
