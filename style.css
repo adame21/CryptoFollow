@@ -1,3 +1,7 @@
+/*WARNING: If something's value isn't a variable it probably shouldnt be changed*/
+/*Pages macro styling*/
+/*Home - Coin cards styling*/
+/*Modal styling*/
 /*desktop*/
 @media (min-width: 1401px) {
   body, html {
@@ -498,6 +502,7 @@
   }
 }
 
+/*responsiveness for the about page*/
 #wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -512,7 +517,6 @@
   width: 70%;
 }
 
-/*responsiveness for the about page*/
 @media (max-width: 767px) {
   #wrapper {
     -webkit-box-orient: vertical;

@@ -1,3 +1,50 @@
+/*WARNING: If something's value isn't a variable it probably shouldnt be changed*/
+
+/*Pages macro styling*/
+$searchhighlighter: 3px solid red;
+
+
+$desktoppagecontwidth: 75%;
+$tabletpagecontwidth: 100%;
+$mobilepagecontwidth: 100%;
+
+
+$desktopchartheight: 500px;
+$tabletchartheight: 550px;
+$mobilechartheight: 300px;
+
+
+/*Home - Coin cards styling*/
+$carddisplayfont: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+$carddisplaycolor: #F8F9FA;
+
+$desktopsymbolfontsize: 1.8em;
+$desktopnamefontsize: 1.05em;
+$desktopcardwidth: 25%;
+$desktopcardmargintop: 1em !important;
+$desktopcardmarginbottom: 1em !important;
+
+
+$tabletsymbolfontsize: 1.8em;
+$tabletnamefontsize: 0.9em;
+$tabletcardwidth: 25%;
+$tabletcardmargintop: 1em !important;
+$tabletcardmarginbottom: 1em !important;
+
+$mobilesymbolfontsize: 1.8em;
+$mobilenamefontsize: 1.05em;
+$mobilecardwidth: 100%;
+$mobilecardmargintop: 2em !important;
+$mobilecardmarginbottom: 2em !important;
+
+/*Modal styling*/
+$desktopmodalcoinwidth: 15%;
+
+$tabletmodalcoinwidth: 15%;
+
+$mobilemodalcoinwidth: 26%;
+
+
 /*desktop*/
 @media (min-width: 1401px){
     body, html {
@@ -10,7 +57,7 @@
         pointer-events: none;
     }
     .searchhighlight{
-        border: 3px solid red;
+        border: $searchhighlighter;
     }
     
     
@@ -29,7 +76,7 @@
     }
     
     #pagecont{
-        width: 75%;
+        width: $desktoppagecontwidth;
         text-align: center;
         margin-top: 7em;
     }
@@ -42,22 +89,22 @@
     /*graph chart styling (made for responsiveness)*/
     .chartstyle{
         width: 100%;
-        height: 500px; //for tablet 550px, for mobile 300px (numbers are for on the side mode)
+        height: $desktopchartheight; //for tablet 550px, for mobile 300px (numbers are for on the side mode)
     }
     
     
     /*single card styling*/
     
     .coinsymbol{
-        font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-        color: #F8F9FA;
-        font-size: 1.8em;
+        font-family: $carddisplayfont;
+        color: $carddisplaycolor;
+        font-size: $desktopsymbolfontsize;
         opacity: 1;
     }
     .coinname{
-        font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-        color: #F8F9FA;
-        font-size: 1.05em;
+        font-family: $carddisplayfont;
+        color: $carddisplaycolor;
+        font-size: $desktopnamefontsize;
         opacity: 1;
         word-wrap: break-word;
     }
@@ -67,11 +114,11 @@
     }
     .makeinline{
         display: inline-block;
-        width: 25%;
+        width: $desktopcardwidth;
         min-height: 12em;
         max-height: 25em;
-        margin-top: 1em !important;
-        margin-bottom: 1em !important;
+        margin-top: $desktopcardmargintop;
+        margin-bottom: $desktopcardmarginbottom;
         min-width: 230px;
         opacity: 0.8;
     }
@@ -81,7 +128,7 @@
     .displaycurrency{
         display: block;
         opacity: 1;
-        color: #F8F9FA;
+        color: $carddisplaycolor;
     }
     .coinimg{
         opacity: 1;
@@ -92,7 +139,7 @@
     /*modal coins styling */
     .modalbodycoin{
         display: inline-block;
-        width: 15%;
+        width: $desktopmodalcoinwidth;
         padding: 1em;
         border-radius: 6px;
     }
@@ -201,7 +248,7 @@
         pointer-events: none;
     }
     .searchhighlight{
-        border: 3px solid red;
+        border: $searchhighlighter;
     }
     
     
@@ -222,7 +269,7 @@
 
 
     #pagecont{
-        width: 100%;
+        width: $tabletpagecontwidth;
         text-align: center;
         margin-top: 7em;
     }
@@ -234,7 +281,7 @@
     /*graph chart styling (made for responsiveness)*/
     .chartstyle{
         width: 100%;
-        height: 550px; //for tablet 550px, for mobile 300px (numbers are for on the side mode)
+        height: $tabletchartheight; //for tablet 550px, for mobile 300px (numbers are for on the side mode)
     }
 
 
@@ -242,15 +289,15 @@
     /*single card styling*/
     
     .coinsymbol{
-        font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-        color: #F8F9FA;
-        font-size: 1.8em;
+        font-family: $carddisplayfont;
+        color: $carddisplaycolor;
+        font-size: $tabletsymbolfontsize;
         opacity: 1;
     }
     .coinname{
-        font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-        color: #F8F9FA;
-        font-size: 0.9em;
+        font-family: $carddisplayfont;
+        color: $carddisplaycolor;
+        font-size: $tabletnamefontsize;
         opacity: 1;
         word-wrap: break-word;
     }
@@ -260,11 +307,11 @@
     }
     .makeinline{
         display: inline-block;
-        width: 25%;
+        width: $tabletcardwidth;
         min-height: 12em;
         max-height: 25em;
-        margin-top: 1em !important;
-        margin-bottom: 1em !important;
+        margin-top: $tabletcardmargintop;
+        margin-bottom: $tabletcardmarginbottom;
         min-width: 230px;
         opacity: 0.8;
     }
@@ -274,7 +321,7 @@
     .displaycurrency{
         display: block;
         opacity: 1;
-        color: #F8F9FA;
+        color: $carddisplaycolor;
     }
     .coinimg{
         opacity: 1;
@@ -284,7 +331,7 @@
     /*modal coins styling */
     .modalbodycoin{
         display: inline-block;
-        width: 15%;
+        width: $tabletmodalcoinwidth;
         padding: 1em;
         border-radius: 6px;
     }
@@ -394,7 +441,7 @@
         pointer-events: none;
     }
     .searchhighlight{
-        border: 3px solid red;
+        border: $searchhighlighter;
     }
     
     
@@ -414,7 +461,7 @@
 
 
     #pagecont{
-        width: 100%;
+        width: $mobilepagecontwidth;
         text-align: center;
         margin-top: 7em;
     }
@@ -426,7 +473,7 @@
     /*graph chart styling (made for responsiveness)*/
     .chartstyle{
         width: 100%;
-        height: 300px; //for tablet 550px, for mobile 300px (numbers are for on the side mode)
+        height: $mobilechartheight; //for tablet 550px, for mobile 300px (numbers are for on the side mode)
     }
     
 
@@ -436,15 +483,15 @@
     /*single card styling*/
     
     .coinsymbol{
-        font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-        color: #F8F9FA;
-        font-size: 1.8em;
+        font-family: $carddisplayfont;
+        color: $carddisplaycolor;
+        font-size: $mobilesymbolfontsize;
         opacity: 1;
     }
     .coinname{
-        font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-        color: #F8F9FA;
-        font-size: 1.05em;
+        font-family: $carddisplayfont;
+        color: $carddisplaycolor;
+        font-size: $mobilenamefontsize;
         opacity: 1;
         word-wrap: break-word;
     }
@@ -454,11 +501,11 @@
     }
     .makeinline{
         display: block;
-        width: 100%;
+        width: $mobilecardwidth;
         min-height: 12em;
         max-height: 25em;
-        margin-top: 2em !important;
-        margin-bottom: 2em !important;
+        margin-top: $mobilecardmargintop;
+        margin-bottom: $mobilecardmarginbottom;
         min-width: 230px;
         opacity: 0.8;
     }
@@ -468,7 +515,7 @@
     .displaycurrency{
         display: block;
         opacity: 1;
-        color: #F8F9FA;
+        color: $carddisplaycolor;
     }
     .coinimg{
         opacity: 1;
@@ -480,7 +527,7 @@
     /*modal coins styling */
     .modalbodycoin{
         display: inline-block;
-        width: 26%;
+        width: $mobilemodalcoinwidth;
         padding: 1em;
         border-radius: 6px;
     }
@@ -581,18 +628,21 @@
         /*graph chart styling (made for responsiveness)*/
         .chartstyle{
             width: 100%;
-            height: 300px; //for tablet 550px, for mobile 300px (numbers are for on the side mode)
+            height: $mobilechartheight; //for tablet 550px, for mobile 300px (numbers are for on the side mode)
         }
     }
     @media(max-width: 1400){
         /*graph chart styling (made for responsiveness)*/
         .chartstyle{
             width: 100%;
-            height: 550px; //for tablet 550px, for mobile 300px (numbers are for on the side mode)
+            height: $tabletchartheight; //for tablet 550px, for mobile 300px (numbers are for on the side mode)
         }
     }
 }
 
+
+
+/*responsiveness for the about page*/
 #wrapper {
     display: flex;
   }
@@ -606,7 +656,7 @@
     width: 70%;
     
   }
-  /*responsiveness for the about page*/
+  
   @media (max-width: 767px) {
     #wrapper {
       flex-direction: column;
