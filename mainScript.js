@@ -32,7 +32,6 @@ function getCoins() {
         success: function (result) {
             primeButtons();
             setupSearch();
-            console.log(result);
             homeStart(result);
         },
         error: function (error) {
@@ -46,7 +45,7 @@ function homeStart(coins) {
     var divcreate = document.createElement("div");
     //coins.length - in the for loop change "100" to this to get all coins! #CHANGECOINAMOUNT
     for (var i = 0; i < 100; i++) {
-        divmaterial += "\n        <div class=\"card text-dark bg-dark m-auto makeinline\" id=\"" + coins[i].id + i + "\" style=\"max-width: 18rem;\">\n            <div class=\"card-header\">\n                <div class=\"flexalign\">\n                    <span class=\"coinsymbol\" id=\"" + (coins[i].symbol.toUpperCase() + "a1") + "\">" + coins[i].symbol.toUpperCase() + "</span>\n                    <label class=\"switch\">\n                        <input type=\"checkbox\" id=\"" + coins[i].id + coins[i].symbol + "\" onchange=\"selectedCoinUpdate(this,'" + coins[i].symbol + "')\"> \n                        <span class=\"slider round\"></span>\n                    </label>\n                </div>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"\">\n                    <h5 class=\"card-title coinname\">" + coins[i].name + "</h5>\n                    <button type=\"button\" class=\"btn btn-secondary\" data-toggle=\"collapse\" href=\"#collapseIdentity" + i + "\" role=\"button\"\n                    aria-expanded=\"false\" aria-controls=\"collapseIdentity" + i + "\" onclick=\"moreInfo('" + coins[i].id + "')\">More info</button>\n                </div>\n                <div class=\"collapse\" id=\"collapseIdentity" + i + "\">\n                    <div class=\"card-body\" id=\"" + coins[i].id + "\">\n                    \n                    </div>\n                </div>\n            </div>\n        </div>";
+        divmaterial += "\n        <div class=\"card text-dark bg-dark m-auto makeinline\" id=\"" + coins[i].id + i + "\" style=\"max-width: 18rem;\">\n            <div class=\"card-header\">\n                <div class=\"flexalign\">\n                    <span class=\"coinsymbol\" id=\"" + (coins[i].symbol.toUpperCase() + "a1") + "\">" + coins[i].symbol.toUpperCase() + "</span>\n                    <label class=\"switch\">\n                        <input type=\"checkbox\" id=\"" + coins[i].id + coins[i].symbol + "\" onchange=\"selectedCoinUpdate(this,'" + coins[i].symbol + "')\"> \n                        <span class=\"slider round\"></span>\n                    </label>\n                </div>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"\">\n                    <h5 class=\"card-title coinname\">" + coins[i].name + "</h5>\n                    <button type=\"button\" class=\"btn btn-secondary\" data-toggle=\"collapse\" href=\"#collapseIdentity" + i + "\" role=\"button\"\n                    aria-expanded=\"false\" aria-controls=\"collapseIdentity" + i + "\" onclick=\"moreInfo('" + coins[i].id + "')\">More info</button>\n                </div>\n                <div class=\"collapse\" id=\"collapseIdentity" + i + "\">\n                    <div class=\"card-body displaycurrency\" id=\"" + coins[i].id + "\">\n                    \n                    </div>\n                </div>\n            </div>\n        </div>";
     }
     divcreate.innerHTML = divmaterial;
     $("#pagecont").append(divcreate);
@@ -73,20 +72,19 @@ function moreInfo(coinid) {
                     var usdprice = Math.floor(result.market_data.current_price.usd * 10000) / 10000;
                     var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
                     var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
-                    $("#" + coinid).html("\n                    <div class=\"moreinfocont\">\n                    <img class=\"coinimg\" src=\"" + result.image.small + "\" />\n                    <span class=\"displaycurrency\">USD: " + usdprice.toFixed(4) + "$</span>\n                    <span class=\"displaycurrency\">EUR: " + eurprice.toFixed(4) + "\u20AC</span>\n                    <span class=\"displaycurrency\">ILS: " + ilsprice.toFixed(4) + "\u20AA</span>\n                    </div>\n                    ");
+                    $("[id='" + coinid + "']").html("\n                    <div class=\"moreinfocont\">\n                    <img class=\"coinimg\" src=\"" + result.image.small + "\" />\n                    <span class=\"displaycurrency\">USD: " + usdprice.toFixed(4) + "$</span>\n                    <span class=\"displaycurrency\">EUR: " + eurprice.toFixed(4) + "\u20AC</span>\n                    <span class=\"displaycurrency\">ILS: " + ilsprice.toFixed(4) + "\u20AA</span>\n                    </div>\n                    ");
                 },
                 error: function (error) {
-                    $("#" + coinid).html("\n                    Could not retrieve data from api error:" + error.statusText + error.status + "\n                    ");
+                    $("[id='" + coinid + "']").html("\n                    Could not retrieve data from api error:" + error.statusText + error.status + "\n                    ");
                 }
             });
         }
         //This else is in case the information existing in localstorage isnt too old (2 minutes is the cutoff)
         else {
-            console.log("why go to the store when we have perfectly good data already here");
             var usdprice = Math.floor(coin.market_data.current_price.usd * 10000) / 10000;
             var eurprice = Math.floor(coin.market_data.current_price.eur * 10000) / 10000;
             var ilsprice = Math.floor(coin.market_data.current_price.ils * 10000) / 10000;
-            $("#" + coinid).html("\n            <div class=\"moreinfocont\">\n            <img class=\"coinimg\" src=\"" + coin.image.small + "\" />\n            <span class=\"displaycurrency\">USD: " + usdprice.toFixed(4) + "$</span>\n            <span class=\"displaycurrency\">EUR: " + eurprice.toFixed(4) + "\u20AC</span>\n            <span class=\"displaycurrency\">ILS: " + ilsprice.toFixed(4) + "\u20AA</span>\n            </div>\n            ");
+            $("[id='" + coinid + "']").html("\n            <div class=\"moreinfocont\">\n            <img class=\"coinimg\" src=\"" + coin.image.small + "\" />\n            <span class=\"displaycurrency\">USD: " + usdprice.toFixed(4) + "$</span>\n            <span class=\"displaycurrency\">EUR: " + eurprice.toFixed(4) + "\u20AC</span>\n            <span class=\"displaycurrency\">ILS: " + ilsprice.toFixed(4) + "\u20AA</span>\n            </div>\n            ");
         }
     }
     //This else is in case whats in localstorage is null(it is checked by ID)
@@ -96,16 +94,17 @@ function moreInfo(coinid) {
             type: "GET",
             url: "https://api.coingecko.com/api/v3/coins/" + coinid,
             success: function (result) {
+                console.log(result);
                 stopInfoLoader(coinid);
                 result.time = Date.now();
                 localStorage.setItem(coinid, JSON.stringify(result));
                 var usdprice = Math.floor(result.market_data.current_price.usd * 10000) / 10000;
                 var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
                 var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
-                $("#" + coinid).html("\n                <div class=\"moreinfocont\">\n                <img class=\"coinimg\" src=\"" + result.image.small + "\" />\n                <span class=\"displaycurrency\">USD: " + usdprice.toFixed(4) + "$</span>\n                <span class=\"displaycurrency\">EUR: " + eurprice.toFixed(4) + "\u20AC</span>\n                <span class=\"displaycurrency\">ILS: " + ilsprice.toFixed(4) + "\u20AA</span>\n                </div>\n                ");
+                $("[id='" + coinid + "']").html("\n                <div class=\"moreinfocont\">\n                <img class=\"coinimg\" src=\"" + result.image.small + "\" />\n                <span class=\"displaycurrency\">USD: " + usdprice.toFixed(4) + "$</span>\n                <span class=\"displaycurrency\">EUR: " + eurprice.toFixed(4) + "\u20AC</span>\n                <span class=\"displaycurrency\">ILS: " + ilsprice.toFixed(4) + "\u20AA</span>\n                </div>\n                ");
             },
             error: function (error) {
-                $("#" + coinid).html("\n                Could not retrieve data from api error:" + error.statusText + error.status + "\n                ");
+                $("[id='" + coinid + "']").html("\n                Could not retrieve data from api error:" + error.statusText + error.status + "\n                ");
             }
         });
     }
@@ -124,7 +123,6 @@ function selectedCoinUpdate(cointoggle, coinsymbol) {
         var modalbody = document.createElement("div");
         modalbody.innerHTML = "";
         for (var i = 0; i < selectedcoins.length; i++) {
-            console.log(selectedcoins[i]);
             modalbody.innerHTML += "\n                <div  class=\"modalbodycoin bg-primary text-light m-2\" onclick=\"changeSelected(this.innerHTML,'" + uppercoinsymbol + "','" + cointoggleid + "','" + selectedcoins[i].id + "')\">" + selectedcoins[i].code + "</div>\n            ";
         }
         $("#modalbodymessage").append(modalbody);

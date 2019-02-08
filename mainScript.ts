@@ -38,7 +38,6 @@ function getCoins(): void {
         success: (result) => {
             primeButtons();
             setupSearch();
-            console.log(result);
             homeStart(result);
         },
         error: (error) => {
@@ -71,7 +70,7 @@ function homeStart(coins: any[]): void {
                     aria-expanded="false" aria-controls="collapseIdentity${i}" onclick="moreInfo('${coins[i].id}')">More info</button>
                 </div>
                 <div class="collapse" id="collapseIdentity${i}">
-                    <div class="card-body" id="${coins[i].id}">
+                    <div class="card-body displaycurrency" id="${coins[i].id}">
                     
                     </div>
                 </div>
@@ -115,7 +114,7 @@ function moreInfo(coinid: any): void {
                     var usdprice = Math.floor(result.market_data.current_price.usd * 10000) / 10000;
                     var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
                     var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
-                    $("#" + coinid).html(`
+                    $("[id='" + coinid+"']").html(`
                     <div class="moreinfocont">
                     <img class="coinimg" src="${result.image.small}" />
                     <span class="displaycurrency">USD: ${usdprice.toFixed(4)}$</span>
@@ -125,7 +124,7 @@ function moreInfo(coinid: any): void {
                     `);
                 },
                 error: (error) => {
-                    $("#" + coinid).html(`
+                    $("[id='" + coinid+"']").html(`
                     Could not retrieve data from api error:${error.statusText}${error.status}
                     `);
                 }
@@ -133,11 +132,10 @@ function moreInfo(coinid: any): void {
         }
         //This else is in case the information existing in localstorage isnt too old (2 minutes is the cutoff)
         else {
-            console.log("why go to the store when we have perfectly good data already here");
             var usdprice = Math.floor(coin.market_data.current_price.usd * 10000) / 10000;
             var eurprice = Math.floor(coin.market_data.current_price.eur * 10000) / 10000;
             var ilsprice = Math.floor(coin.market_data.current_price.ils * 10000) / 10000;
-            $("#" + coinid).html(`
+            $("[id='" + coinid+"']").html(`
             <div class="moreinfocont">
             <img class="coinimg" src="${coin.image.small}" />
             <span class="displaycurrency">USD: ${usdprice.toFixed(4)}$</span>
@@ -154,13 +152,14 @@ function moreInfo(coinid: any): void {
             type: "GET",
             url: `https://api.coingecko.com/api/v3/coins/${coinid}`,
             success: (result) => {
+                console.log(result);
                 stopInfoLoader(coinid);
                 result.time = Date.now();
                 localStorage.setItem(coinid, JSON.stringify(result));
                 var usdprice = Math.floor(result.market_data.current_price.usd * 10000) / 10000;
                 var eurprice = Math.floor(result.market_data.current_price.eur * 10000) / 10000;
                 var ilsprice = Math.floor(result.market_data.current_price.ils * 10000) / 10000;
-                $("#" + coinid).html(`
+                $("[id='" + coinid+"']").html(`
                 <div class="moreinfocont">
                 <img class="coinimg" src="${result.image.small}" />
                 <span class="displaycurrency">USD: ${usdprice.toFixed(4)}$</span>
@@ -170,7 +169,7 @@ function moreInfo(coinid: any): void {
                 `);
             },
             error: (error) => {
-                $("#" + coinid).html(`
+                $("[id='" + coinid+"']").html(`
                 Could not retrieve data from api error:${error.statusText}${error.status}
                 `);
             }
@@ -203,7 +202,6 @@ function selectedCoinUpdate(cointoggle: any, coinsymbol: any) {
         var modalbody: any = document.createElement("div");
         modalbody.innerHTML = "";
         for (var i = 0; i < selectedcoins.length; i++) {
-            console.log(selectedcoins[i]);
             modalbody.innerHTML += `
                 <div  class="modalbodycoin bg-primary text-light m-2" onclick="changeSelected(this.innerHTML,'${uppercoinsymbol}','${cointoggleid}','${selectedcoins[i].id}')">${selectedcoins[i].code}</div>
             `;
